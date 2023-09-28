@@ -1,9 +1,15 @@
 package chess;
 import java.util.Collection;
 
-public class ChessPieceE implements chess.ChessPiece {
+public class ChessPieceE implements ChessPiece {
+
     private ChessGame.TeamColor teamColor;
     private PieceType pieceType;
+
+    public ChessPieceE(ChessGame.TeamColor teamColor, PieceType pieceType) {
+        this.teamColor = teamColor;
+        this.pieceType = pieceType;
+    }
 
     @Override
     public ChessGame.TeamColor getTeamColor() {
@@ -17,7 +23,6 @@ public class ChessPieceE implements chess.ChessPiece {
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> validMoves = null;
-        return validMoves;
+        return null;
     }
 }

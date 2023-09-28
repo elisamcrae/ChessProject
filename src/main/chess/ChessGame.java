@@ -81,8 +81,8 @@ public interface ChessGame {
 
     /**
      * Gets the current chessboard
-     * 
+     *
      * @return the chessboard
      */
-    ChessBoard getBoard();
+    ChessPiece[][] getBoard();
 }
