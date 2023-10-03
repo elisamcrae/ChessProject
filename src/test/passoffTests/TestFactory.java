@@ -41,7 +41,7 @@ public class TestFactory {
     }
 
     public static ChessPosition getNewPosition(Integer row, Integer col){
-		return new ChessPositionE(row-1, col-1);
+		return new ChessPositionE(row, col);
     }
 
     public static ChessMove getNewMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece){
