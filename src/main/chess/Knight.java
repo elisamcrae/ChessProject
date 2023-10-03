@@ -10,7 +10,6 @@ public class Knight extends ChessPieceE{
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> validMoves = new ArrayList<ChessMove>();
-        //ChessPositionE myPos = new ChessPositionE(myPosition.getRow()-1, myPosition.getColumn()-1);
 
         ChessPositionE newPos = new ChessPositionE();
         newPos.setRow(myPosition.getRow() + 2);
