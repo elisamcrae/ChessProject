@@ -19,11 +19,29 @@ public class TestFactory {
     }
 
     public static ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type){
-		return new ChessPieceE(pieceColor, type);
+        if (type == ChessPiece.PieceType.ROOK) {
+            return new Rook(pieceColor);
+        }
+        else if (type == ChessPiece.PieceType.BISHOP) {
+            return new Bishop(pieceColor);
+        }
+        else if (type == ChessPiece.PieceType.KNIGHT) {
+            return new Knight(pieceColor);
+        }
+        else if (type == ChessPiece.PieceType.QUEEN) {
+            return new Queen(pieceColor);
+        }
+        else if (type == ChessPiece.PieceType.KING) {
+            return new King(pieceColor);
+        }
+        else if (type == ChessPiece.PieceType.PAWN) {
+            return new Pawn(pieceColor);
+        }
+        return null;
     }
 
     public static ChessPosition getNewPosition(Integer row, Integer col){
-		return new ChessPositionE(row, col);
+		return new ChessPositionE(row-1, col-1);
     }
 
     public static ChessMove getNewMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece){

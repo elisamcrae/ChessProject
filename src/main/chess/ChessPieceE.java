@@ -1,7 +1,7 @@
 package chess;
 import java.util.Collection;
 
-public class ChessPieceE implements ChessPiece {
+public abstract class ChessPieceE implements ChessPiece {
 
     private ChessGame.TeamColor teamColor;
     private PieceType pieceType;

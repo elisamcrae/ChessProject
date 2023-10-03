@@ -42,7 +42,7 @@ public class ChessGameE implements ChessGame {
     }
 
     @Override
-    public ChessPiece[][] getBoard() {
-        return board.getBoard();
+    public ChessBoard getBoard() {
+        return board;
     }
 }
