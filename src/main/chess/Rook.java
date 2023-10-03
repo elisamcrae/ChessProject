@@ -15,13 +15,22 @@ public class Rook extends ChessPieceE{
         ((ChessPositionE) currPos).setCol(myPosition.getColumn());
         ChessGame.TeamColor myTeamColor = board.getPiece(myPosition).getTeamColor();
 
+        ChessPosition myPos = new ChessPositionE();
+        ((ChessPositionE) myPos).setRow(myPosition.getRow()+1);
+        ((ChessPositionE) myPos).setCol(myPosition.getColumn()+1);
+
         //up
         while(currPos.getRow()!=7) {
             ((ChessPositionE) currPos).setRow(currPos.getRow()+1);
 
             if (board.getPiece(currPos)==null) {
-                ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessPosition x = new ChessPositionE();
+                ((ChessPositionE) x).setRow(currPos.getRow());
+                ((ChessPositionE) x).setCol(currPos.getColumn());
+                //ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessMoveE move = new ChessMoveE(myPosition, x);
                 validMoves.add(move);
+                x = null;
             }
 
             //ran into your own piece
@@ -30,8 +39,13 @@ public class Rook extends ChessPieceE{
             }
             //capture other player's piece
             else if (board.getPiece(currPos).getTeamColor()!=myTeamColor) {
-                ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessPosition x = new ChessPositionE();
+                ((ChessPositionE) x).setRow(currPos.getRow());
+                ((ChessPositionE) x).setCol(currPos.getColumn());
+                //ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessMoveE move = new ChessMoveE(myPosition, x);
                 validMoves.add(move);
+                x = null;
                 break;
             }
 
@@ -40,11 +54,16 @@ public class Rook extends ChessPieceE{
         ((ChessPositionE) currPos).setCol(myPosition.getColumn());
 
         //down
-        while(currPos.getRow()!=1) {
+        while(currPos.getRow()!=0) {
             ((ChessPositionE) currPos).setRow(currPos.getRow()-1);
             if (board.getPiece(currPos)==null) {
-                ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessPosition x = new ChessPositionE();
+                ((ChessPositionE) x).setRow(currPos.getRow());
+                ((ChessPositionE) x).setCol(currPos.getColumn());
+                //ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessMoveE move = new ChessMoveE(myPosition, x);
                 validMoves.add(move);
+                x = null;
             }
 
             //ran into your own piece
@@ -53,8 +72,13 @@ public class Rook extends ChessPieceE{
             }
             //capture other player's piece
             else if (board.getPiece(currPos).getTeamColor()!=myTeamColor) {
-                ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessPosition x = new ChessPositionE();
+                ((ChessPositionE) x).setRow(currPos.getRow());
+                ((ChessPositionE) x).setCol(currPos.getColumn());
+                //ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessMoveE move = new ChessMoveE(myPosition, x);
                 validMoves.add(move);
+                x = null;
                 break;
             }
         }
@@ -65,8 +89,13 @@ public class Rook extends ChessPieceE{
         while(currPos.getColumn()!=7) {
             ((ChessPositionE) currPos).setCol(currPos.getColumn()+1);
             if (board.getPiece(currPos)==null) {
-                ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessPosition x = new ChessPositionE();
+                ((ChessPositionE) x).setRow(currPos.getRow());
+                ((ChessPositionE) x).setCol(currPos.getColumn());
+                //ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessMoveE move = new ChessMoveE(myPosition, x);
                 validMoves.add(move);
+                x = null;
             }
 
             //ran into your own piece
@@ -75,8 +104,13 @@ public class Rook extends ChessPieceE{
             }
             //capture other player's piece
             else if (board.getPiece(currPos).getTeamColor()!=myTeamColor) {
-                ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessPosition x = new ChessPositionE();
+                ((ChessPositionE) x).setRow(currPos.getRow());
+                ((ChessPositionE) x).setCol(currPos.getColumn());
+                //ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessMoveE move = new ChessMoveE(myPosition, x);
                 validMoves.add(move);
+                x = null;
                 break;
             }
         }
@@ -84,11 +118,16 @@ public class Rook extends ChessPieceE{
         ((ChessPositionE) currPos).setCol(myPosition.getColumn());
 
         //right
-        while(currPos.getColumn()!=1) {
+        while(currPos.getColumn()!=0) {
             ((ChessPositionE) currPos).setCol(currPos.getColumn()-1);
             if (board.getPiece(currPos)==null) {
-                ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessPosition x = new ChessPositionE();
+                ((ChessPositionE) x).setRow(currPos.getRow());
+                ((ChessPositionE) x).setCol(currPos.getColumn());
+                //ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessMoveE move = new ChessMoveE(myPosition, x);
                 validMoves.add(move);
+                x = null;
             }
 
             //ran into your own piece
@@ -97,8 +136,13 @@ public class Rook extends ChessPieceE{
             }
             //capture other player's piece
             else if (board.getPiece(currPos).getTeamColor()!=myTeamColor) {
-                ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessPosition x = new ChessPositionE();
+                ((ChessPositionE) x).setRow(currPos.getRow());
+                ((ChessPositionE) x).setCol(currPos.getColumn());
+                //ChessMoveE move = new ChessMoveE(myPosition, new ChessPositionE(currPos.getRow(), currPos.getColumn()));
+                ChessMoveE move = new ChessMoveE(myPosition, x);
                 validMoves.add(move);
+                x = null;
                 break;
             }
         }
