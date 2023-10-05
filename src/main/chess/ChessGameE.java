@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 public class ChessGameE implements ChessGame {
-    private TeamColor teamTurn;
+    private TeamColor teamTurn = TeamColor.WHITE;
     private ChessBoardE board;
 
     @Override
@@ -20,18 +20,37 @@ public class ChessGameE implements ChessGame {
 
     @Override
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        //FIXME
-        //IS THIS ALL THIS METHOD NEEDS?
-        if (board.getPiece(startPosition) == null) {
-            return null;
-        }
+        if (board.getPiece(startPosition) == null) {return null;}
 
         Collection<ChessMove> moves = board.getPiece(startPosition).pieceMoves(board, startPosition);
-        //if (isInCheck(board.getPiece(startPosition).getTeamColor())) {
+//        Collection<ChessMove> canDo = new ArrayList<ChessMove>();
+//        for (Iterator<ChessMove> iterator = moves.iterator(); iterator.hasNext(); ) {
+//            ChessMove move = iterator.next();
+//            if (!willMoveMakeCheck((ChessMoveE)move)) {
+//                canDo.add(move);
+//            }
+//        }
 
-        //}
         return moves;
+        ///return moves;
     }
+
+//    public Boolean willMoveMakeCheck(ChessMoveE move) {
+//        ChessPosition currPos = move.getStartPosition();
+//        ChessPiece currPiece = board.getPiece(currPos);
+//        ChessPosition finalPos = move.getEndPosition();
+//        ChessPiece finalPiece = board.getPiece(finalPos);
+//        board.makeMove(move);
+//
+//        if (!isInCheck(teamTurn)) {
+//            board.addPiece(finalPos, finalPiece);
+//            board.addPiece(currPos, currPiece);
+//            return false;
+//        }
+//        else {
+//            return true;
+//        }
+//    }
 
     @Override
     public void makeMove(ChessMove move) throws InvalidMoveException {
@@ -166,10 +185,41 @@ public class ChessGameE implements ChessGame {
 
     @Override
     public boolean isInStalemate(TeamColor teamColor) {
-        if (getMoves(teamColor) == null & teamColor == teamTurn) {
+        if (teamColor != teamTurn) {
+            return false;
+        }
+        Collection<ChessMove> moves = new ArrayList<ChessMove>();
+        if (teamColor == TeamColor.BLACK) {
+            moves = getMoves(TeamColor.WHITE);
+        }
+        else {
+            moves = getMoves(TeamColor.BLACK);
+        }
+        if (moves.isEmpty() & teamColor == teamTurn) {
             return true;
         }
-        return false;
+
+        //looking for pinned piece
+        Collection<ChessMove> canDo = new ArrayList<ChessMove>();
+        for (Iterator<ChessMove> iterator = moves.iterator(); iterator.hasNext(); ) {
+            ChessMove move = iterator.next();
+            ChessPosition currPos = move.getStartPosition();
+            ChessPiece currPiece = board.getPiece(currPos);
+            ChessPosition finalPos = move.getEndPosition();
+            ChessPiece finalPiece = board.getPiece(finalPos);
+            board.makeMove(move);
+
+            if (!isInCheck(teamTurn)) {
+                canDo.add(move);
+
+            }
+            board.addPiece(finalPos, finalPiece);
+            board.addPiece(currPos, currPiece);
+        }
+        if (canDo.isEmpty()) {
+            return true;
+        }
+            return false;
     }
 
     @Override
