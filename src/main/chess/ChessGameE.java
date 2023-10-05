@@ -49,6 +49,11 @@ public class ChessGameE implements ChessGame {
 
     @Override
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        if (teamTurn != board.getPiece(move.getStartPosition()).getTeamColor()) {
+            InvalidMoveException InvalidMoveexception = new InvalidMoveException();
+            throw InvalidMoveexception;
+
+        }
         Collection<ChessMove> moves = validMoves(move.getStartPosition());
 
         //move not in valid moves
@@ -57,9 +62,9 @@ public class ChessGameE implements ChessGame {
             throw InvalidMoveexception;
 
         //it's not your turn
-        } else if (teamTurn != board.getPiece(move.getStartPosition()).getTeamColor()) {
-            InvalidMoveException InvalidMoveexception = new InvalidMoveException();
-            throw InvalidMoveexception;
+//        } else if (teamTurn != board.getPiece(move.getStartPosition()).getTeamColor()) {
+//            InvalidMoveException InvalidMoveexception = new InvalidMoveException();
+//            throw InvalidMoveexception;
 
         } else if (isInCheck(teamTurn)) {
             ChessPosition currPos = move.getStartPosition();
