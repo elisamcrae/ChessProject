@@ -5,6 +5,7 @@ import java.util.Objects;
 public class ChessMoveE implements ChessMove {
     private ChessPosition startPosition;
     private ChessPosition endPosition;
+    private ChessPiece.PieceType promotion;
 
     @Override
     public ChessPosition getStartPosition() {
@@ -33,14 +34,20 @@ public class ChessMoveE implements ChessMove {
         return Objects.hash(startPosition, endPosition);
     }
 
+    public ChessMoveE(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotion) {
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+        this.promotion = promotion;
+    }
+
     public ChessMoveE(ChessPosition startPosition, ChessPosition endPosition) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
+        this.promotion = null;
     }
 
     @Override
     public ChessPiece.PieceType getPromotionPiece() {
-        //FIXME
-        return null;
+        return promotion;
     }
 }

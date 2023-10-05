@@ -45,7 +45,7 @@ public class TestFactory {
     }
 
     public static ChessMove getNewMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece){
-		return new ChessMoveE(startPosition, endPosition);
+		return new ChessMoveE(startPosition, endPosition, promotionPiece);
     }
     //------------------------------------------------------------------------------------------------------------------
 

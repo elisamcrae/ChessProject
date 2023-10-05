@@ -26,7 +26,7 @@ public class ChessGameE implements ChessGame {
             return null;
         }
 
-        Collection<ChessMove> moves = board.getPiece(startPosition).pieceMoves(board, startPosition)
+        Collection<ChessMove> moves = board.getPiece(startPosition).pieceMoves(board, startPosition);
         //if (isInCheck(board.getPiece(startPosition).getTeamColor())) {
 
         //}
@@ -62,6 +62,26 @@ public class ChessGameE implements ChessGame {
 
         } else {
             board.makeMove(move);
+            if (move.getPromotionPiece() != null & (move.getEndPosition().getRow() == 0 | move.getEndPosition().getRow() == 7)) {
+                ChessPieceE p = new Pawn(teamTurn);
+                if (move.getPromotionPiece() == ChessPiece.PieceType.KING) {
+                    p = new King(teamTurn);
+                }
+                else if (move.getPromotionPiece() == ChessPiece.PieceType.QUEEN) {
+                    p = new Queen(teamTurn);
+                }
+                else if (move.getPromotionPiece() == ChessPiece.PieceType.ROOK) {
+                    p = new Rook(teamTurn);
+                }
+                else if (move.getPromotionPiece() == ChessPiece.PieceType.BISHOP) {
+                    p = new Bishop(teamTurn);
+                }
+                else if (move.getPromotionPiece() == ChessPiece.PieceType.KNIGHT) {
+                    p = new Knight(teamTurn);
+                }
+                board.addPiece(move.getEndPosition(), p);
+                //board[move.getEndPosition().getRow()][move.getEndPosition().getColumn()] = move.getPromotionPiece();
+            }
         }
 
         //update turn color
@@ -146,6 +166,9 @@ public class ChessGameE implements ChessGame {
 
     @Override
     public boolean isInStalemate(TeamColor teamColor) {
+        if (getMoves(teamColor) == null & teamColor == teamTurn) {
+            return true;
+        }
         return false;
     }
 
