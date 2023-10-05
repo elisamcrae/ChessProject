@@ -19,6 +19,48 @@ public class ChessBoardE implements ChessBoard {
         return board[position.getRow()][position.getColumn()];
     }
 
+    public ChessPosition getPosition(ChessPiece.PieceType type, ChessGame.TeamColor color) {
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                if (board[i][j] != null) {
+                    if (board[i][j].getPieceType() == ChessPiece.PieceType.KING & board[i][j].getTeamColor() == color) {
+                        ChessPositionE p = new ChessPositionE();
+                        p.setRow(i);
+                        p.setCol(j);
+                        return p;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public void makeMove(ChessMove move) {
+        ChessPiece.PieceType type = getPiece(move.getStartPosition()).getPieceType();
+        ChessGame.TeamColor color = getPiece(move.getStartPosition()).getTeamColor();
+        ChessPosition startingPos = move.getStartPosition();
+        ChessPosition endingPos = move.getEndPosition();
+        board[startingPos.getRow()][startingPos.getColumn()] = null;
+        if (type == ChessPiece.PieceType.PAWN) {
+            board[endingPos.getRow()][endingPos.getColumn()] = new Pawn(color);
+        }
+        else if (type == ChessPiece.PieceType.ROOK) {
+            board[endingPos.getRow()][endingPos.getColumn()] = new Rook(color);
+        }
+        else if (type == ChessPiece.PieceType.BISHOP) {
+            board[endingPos.getRow()][endingPos.getColumn()] = new Bishop(color);
+        }
+        else if (type == ChessPiece.PieceType.QUEEN) {
+            board[endingPos.getRow()][endingPos.getColumn()] = new Queen(color);
+        }
+        else if (type == ChessPiece.PieceType.KNIGHT) {
+            board[endingPos.getRow()][endingPos.getColumn()] = new Knight(color);
+        }
+        else if (type == ChessPiece.PieceType.KING) {
+            board[endingPos.getRow()][endingPos.getColumn()] = new King(color);
+        }
+    }
+
     @Override
     public void resetBoard() {
         board = new ChessPiece[8][8];
