@@ -20,37 +20,32 @@ public class ChessGameE implements ChessGame {
 
     @Override
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        teamTurn = board.getPiece(startPosition).getTeamColor();//ADDED
         if (board.getPiece(startPosition) == null) {return null;}
 
         Collection<ChessMove> moves = board.getPiece(startPosition).pieceMoves(board, startPosition);
-//        Collection<ChessMove> canDo = new ArrayList<ChessMove>();
-//        for (Iterator<ChessMove> iterator = moves.iterator(); iterator.hasNext(); ) {
-//            ChessMove move = iterator.next();
-//            if (!willMoveMakeCheck((ChessMoveE)move)) {
-//                canDo.add(move);
-//            }
-//        }
 
-        return moves;
-        ///return moves;
+        Collection<ChessMove> canDo = new ArrayList<ChessMove>();
+        for (Iterator<ChessMove> iterator = moves.iterator(); iterator.hasNext(); ) {
+            ChessMove move = iterator.next();
+            ChessPosition currPos = move.getStartPosition();
+            ChessPiece currPiece = board.getPiece(currPos);
+            ChessPosition finalPos = move.getEndPosition();
+            ChessPiece finalPiece = board.getPiece(finalPos);
+            board.makeMove(move);
+
+            if (!isInCheck(teamTurn)) {
+            //if (!isInCheck(board.getPiece(startPosition).getTeamColor())) {
+                canDo.add(move);
+            }
+
+            board.addPiece(finalPos, finalPiece);
+            board.addPiece(currPos, currPiece);
+        }
+        return canDo;
     }
 
-//    public Boolean willMoveMakeCheck(ChessMoveE move) {
-//        ChessPosition currPos = move.getStartPosition();
-//        ChessPiece currPiece = board.getPiece(currPos);
-//        ChessPosition finalPos = move.getEndPosition();
-//        ChessPiece finalPiece = board.getPiece(finalPos);
-//        board.makeMove(move);
-//
-//        if (!isInCheck(teamTurn)) {
-//            board.addPiece(finalPos, finalPiece);
-//            board.addPiece(currPos, currPiece);
-//            return false;
-//        }
-//        else {
-//            return true;
-//        }
-//    }
+
 
     @Override
     public void makeMove(ChessMove move) throws InvalidMoveException {
@@ -65,6 +60,7 @@ public class ChessGameE implements ChessGame {
         } else if (teamTurn != board.getPiece(move.getStartPosition()).getTeamColor()) {
             InvalidMoveException InvalidMoveexception = new InvalidMoveException();
             throw InvalidMoveexception;
+
         } else if (isInCheck(teamTurn)) {
             ChessPosition currPos = move.getStartPosition();
             ChessPiece currPiece = board.getPiece(currPos);
@@ -114,31 +110,13 @@ public class ChessGameE implements ChessGame {
     @Override
     public boolean isInCheck(TeamColor teamColor) {
         ChessPosition kingPos = board.getPosition(ChessPiece.PieceType.KING, teamColor);
-        //Collection<ChessMove> moves = new ArrayList<ChessMove>();
         Collection<ChessPosition> endPositions = new ArrayList<ChessPosition>();
-//        for (int i = 0; i < 8; ++i) {
-//            for (int j = 0; j < 8; ++j) {
-//                //opposite team pieces
-//                ChessPositionE p = new ChessPositionE();
-//                p.setRow(i);
-//                p.setCol(j);
-//                if (board.getPiece(p) != null) {
-//                    if (board.getPiece(p).getTeamColor() != teamColor) {
-//                        ChessPositionE o = new ChessPositionE();
-//                        o.setRow(i);
-//                        o.setCol(j);
-//                        moves.addAll(validMoves(o));
-//                    }
-//                }
-//            }
-//        }
+
         Collection<ChessMove> moves = getMoves(teamColor);
         for (Iterator<ChessMove> iterator = moves.iterator(); iterator.hasNext(); ) {
             endPositions.add(iterator.next().getEndPosition());
         }
-        if (endPositions.contains(kingPos)) {
-            return true;
-        }
+        if (endPositions.contains(kingPos)) {return true;}
         return false;
     }
 
@@ -155,7 +133,7 @@ public class ChessGameE implements ChessGame {
                         ChessPositionE o = new ChessPositionE();
                         o.setRow(i);
                         o.setCol(j);
-                        moves.addAll(validMoves(o));
+                        moves.addAll(board.getPiece(o).pieceMoves(board, o));
                     }
                 }
             }
