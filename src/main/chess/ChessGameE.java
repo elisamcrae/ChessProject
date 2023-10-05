@@ -25,21 +25,46 @@ public class ChessGameE implements ChessGame {
         if (board.getPiece(startPosition) == null) {
             return null;
         }
-        return board.getPiece(startPosition).pieceMoves(board, startPosition);
+
+        Collection<ChessMove> moves = board.getPiece(startPosition).pieceMoves(board, startPosition)
+        //if (isInCheck(board.getPiece(startPosition).getTeamColor())) {
+
+        //}
+        return moves;
     }
 
     @Override
     public void makeMove(ChessMove move) throws InvalidMoveException {
         Collection<ChessMove> moves = validMoves(move.getStartPosition());
+
+        //move not in valid moves
         if (!moves.contains(move) | moves == null) {
             InvalidMoveException InvalidMoveexception = new InvalidMoveException();
             throw InvalidMoveexception;
+
+        //it's not your turn
         } else if (teamTurn != board.getPiece(move.getStartPosition()).getTeamColor()) {
             InvalidMoveException InvalidMoveexception = new InvalidMoveException();
             throw InvalidMoveexception;
+        } else if (isInCheck(teamTurn)) {
+            ChessPosition currPos = move.getStartPosition();
+            ChessPiece currPiece = board.getPiece(currPos);
+            ChessPosition finalPos = move.getEndPosition();
+            ChessPiece finalPiece = board.getPiece(finalPos);
+            board.makeMove(move);
+            if (isInCheck(teamTurn)) {
+                board.addPiece(finalPos, finalPiece);
+                board.addPiece(currPos, currPiece);
+
+                InvalidMoveException InvalidMoveexception = new InvalidMoveException();
+                throw InvalidMoveexception;
+            }
+
         } else {
             board.makeMove(move);
         }
+
+        //update turn color
         if (teamTurn == TeamColor.BLACK) {
             teamTurn = TeamColor.WHITE;
         } else {

@@ -21,7 +21,7 @@ public class Knight extends ChessPieceE{
                 ChessMoveE move = new ChessMoveE(myPosition, newPos);
                 validMoves.add(move);
             }
-            else if (board.getPiece(newPos).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
+            else if (board.getPiece(newPosB).getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
                 ChessMoveE move = new ChessMoveE(myPosition, newPos);
                 validMoves.add(move);
             }
