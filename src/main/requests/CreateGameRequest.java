@@ -1,12 +1,15 @@
 package requests;
 
+/**
+ * HTTP request information to create a new chess game
+ */
 public class CreateGameRequest {
     private String gameName;
     private String whiteUsername;
     private String blackUsername;
 
     /**
-     * Returns the name of the current game
+     * Returns the name of the current game.
      * @return gameName
      */
     public String getGameName() {
@@ -14,7 +17,7 @@ public class CreateGameRequest {
     }
 
     /**
-     * Sets the name of the current game to the string parameter
+     * Sets the name of the current game to the string parameter.
      * @param gameName  the string to which the current game name should be set
      */
     public void setGameName(String gameName) {
@@ -22,7 +25,7 @@ public class CreateGameRequest {
     }
 
     /**
-     * Returns the username for the white player
+     * Returns the username for the white player.
      * @return white player username
      */
     public String getWhiteUsername() {
@@ -30,7 +33,7 @@ public class CreateGameRequest {
     }
 
     /**
-     * Sets the current white player username to the string parameter
+     * Sets the current white player username to the string parameter.
      * @param whiteUsername the string to which the current white username should be set
      */
     public void setWhiteUsername(String whiteUsername) {
@@ -38,7 +41,7 @@ public class CreateGameRequest {
     }
 
     /**
-     * Returns the username for the black player
+     * Returns the username for the black player.
      * @return  black player username
      */
     public String getBlackUsername() {
@@ -46,7 +49,7 @@ public class CreateGameRequest {
     }
 
     /**
-     * Sets the current black player username to the string parameter
+     * Sets the current black player username to the string parameter.
      * @param blackUsername the string to which the current black username should be set
      */
     public void setBlackUsername(String blackUsername) {
@@ -54,7 +57,7 @@ public class CreateGameRequest {
     }
 
     /**
-     * HTTP request to create new chess game
+     * HTTP request to create new chess game.
      * @param gameName  the name to which the new chess game should be set
      * @param whiteUsername the username for the white player
      * @param blackUsername the username for the black player
