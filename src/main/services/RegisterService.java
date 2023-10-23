@@ -1,5 +1,7 @@
 package services;
 
+import dataAccess.DataAccessException;
+import dataAccess.UserDAO;
 import model.User;
 import requests.RegisterRequest;
 import responses.RegisterResponse;
@@ -14,24 +16,29 @@ public class RegisterService {
      * @param r the HTTP request to register a user
      * @return  the HTTP response to the register user request
      */
-    public RegisterResponse register(RegisterRequest r) {
+    public RegisterResponse register(RegisterRequest r) throws DataAccessException {
         try {
             User u = new User(r.getUsername(), r.getPassword(), r.getEmail());
-            //Add to UserDAO
             RegisterResponse rr = new RegisterResponse();
-            rr.setMessage("200");
-            return rr;
+            if (!UserDAO.contains(u)) {
+                UserDAO.createUser(u);
+                rr.setMessage("200");
+                rr.setUsername(r.getUsername());
+                rr.setPassword(r.getPassword());
+                rr.setEmail(r.getEmail());
+                return rr;
+            }
+            else {
+                rr.setMessage("400");
+                return rr;
+            }
         }
-        catch {
+        catch(DataAccessException e) {
             //Bad request
             RegisterResponse rr = new RegisterResponse();
-            rr.setMessage("400");
+            rr.setMessage("500");
             return rr;
         }
-        //also check if already taken or 500 error
-
-
-        return null;
     }
 
     public RegisterService() {

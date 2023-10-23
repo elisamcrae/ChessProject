@@ -9,6 +9,7 @@ import java.util.ArrayList;
  * Stores and retrieves game objects
  */
 public interface GameDAO {
+    ArrayList<Game> gameDB = new ArrayList<>();
     /**
      * Creates a game in the database given the game object
      * @param g the game object to be stored in the database
@@ -51,5 +52,7 @@ public interface GameDAO {
      * Clears all the information within the database by deleting all games.
      * @throws DataAccessException  exception thrown if the database cannot be accessed properly
      */
-    void clear() throws DataAccessException;
+    static void clear() {
+        gameDB.clear();
+    };
 }

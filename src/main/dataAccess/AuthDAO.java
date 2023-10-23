@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * Stores and retrieves authentication token objects
  */
 public interface AuthDAO {
+    ArrayList<AuthToken> authDB = new ArrayList<>();
     /**
      * Updates the authentication token by matching the information to the
      * parameter authentication token object.
@@ -25,5 +26,7 @@ public interface AuthDAO {
      * Clears all the information within the database by deleting all authentication tokens.
      * @throws DataAccessException  exception thrown if the database cannot be accessed properly
      */
-    void clear() throws DataAccessException;
+    static void clear() {
+        authDB.clear();
+    };
 }

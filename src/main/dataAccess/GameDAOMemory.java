@@ -46,9 +46,4 @@ public class GameDAOMemory implements GameDAO{
     public void deleteGame(Game g) throws DataAccessException {
         gameDatabase.remove(g);
     }
-
-    @Override
-    public void clear() throws DataAccessException {
-        gameDatabase.clear();
-    }
 }

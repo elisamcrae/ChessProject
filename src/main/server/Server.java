@@ -6,6 +6,8 @@ import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.LoginResponse;
 import services.*;
+import spark.Request;
+import spark.Response;
 import spark.Spark;
 
 import static spark.Spark.delete;

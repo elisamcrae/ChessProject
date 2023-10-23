@@ -4,6 +4,7 @@ package responses;
  * HTTP response information when attempting to create a new game
  */
 public class CreateGameResponse {
+    private Boolean success;
     private String message;
     private String gameName;
     private String whiteUsername;

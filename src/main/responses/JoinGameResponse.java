@@ -4,6 +4,7 @@ package responses;
  * HTTP response information when attempting to join a chess game
  */
 public class JoinGameResponse {
+    private Boolean success;
     private String message;
 
     public String getMessage() {
