@@ -32,15 +32,18 @@ public class LoginHandler implements Route {
                     response.status(HttpStatus.OK_200);
                 }
             }
-            if (!successful) {
-                response.status(400);
-                result.setMessage("Error");
+            if (!successful && Objects.equals(result.getMessage(), "Error: unauthorized")) {
+                response.status(HttpStatus.UNAUTHORIZED_401);
+                //result.setMessage("Error");
             }
+            response.body(new Gson().toJson(result, LoginResponse.class));
+            return response.body();
         }
         catch (Exception e) {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
         }
-        response.body(new Gson().toJson(result, LoginResponse.class));
-        return response.body();
+//        response.body(new Gson().toJson(result, LoginResponse.class));
+//        return response.body();
+        return null;
     }
 }

@@ -37,10 +37,13 @@ public class LoginService {
                 rr.setUsername(r.getUsername());
                 return rr;
             }
+            else {
+                rr.setMessage("Error: unauthorized");
+                return rr;
+            }
         } catch (DataAccessException e) {
-            rr.setMessage("Error");
+            rr.setMessage("Error: This data cannot be accessed");
             return rr;
         }
-        return null;
     }
 }

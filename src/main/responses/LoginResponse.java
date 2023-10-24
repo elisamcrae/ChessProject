@@ -4,7 +4,6 @@ package responses;
  * HTTP response information when attempting to login
  */
 public class LoginResponse {
-    private Boolean success;
     private String message;
     private String authToken;
     private String username;
@@ -62,4 +61,5 @@ public class LoginResponse {
      */
     public LoginResponse() {
     }
+
 }
