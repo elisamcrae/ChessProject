@@ -26,7 +26,7 @@ public class LoginService {
         //findUser with username;
         LoginResponse rr = new LoginResponse();
         try {
-            User u = UserDAO.getUserByUsername(r.getUsername());
+            User u = UserDAO.getUserByUsername(r.getUsername(), r.getPassword());
             if (u != null) {
                 //insertAuth with the authtoken;
                 AuthToken a = new AuthToken(u.getUserID());

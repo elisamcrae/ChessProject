@@ -34,9 +34,9 @@ public interface UserDAO {
         return null;
     }
 
-    static User getUserByUsername(String username) throws DataAccessException {
+    static User getUserByUsername(String username, String password) throws DataAccessException {
         for(int i = 0; i < userDB.size(); ++i) {
-            if (Objects.equals(userDB.get(i).getUsername(), username)) {
+            if (Objects.equals(userDB.get(i).getUsername(), username) && Objects.equals(userDB.get(i).getPassword(), password)) {
                 return userDB.get(i);
             }
         }
