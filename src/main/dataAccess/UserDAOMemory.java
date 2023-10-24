@@ -12,16 +12,16 @@ import java.util.ArrayList;
 public class UserDAOMemory implements UserDAO{
     private static ArrayList<User> userDatabase = new ArrayList<>();
 
-    @Override
-    public User getUser(AuthToken a) throws DataAccessException {
-//        for (int i = 0; i < userDatabase.size(); ++i) {
-//            if (userDatabase.get(i).get)
-//        }
-        return null;
-    }
+//    @Override
+//    public User getUser(AuthToken a) throws DataAccessException {
+////        for (int i = 0; i < userDatabase.size(); ++i) {
+////            if (userDatabase.get(i).get)
+////        }
+//        return null;
+//    }
 
-    @Override
-    public void deleteUser(User u) throws DataAccessException {
-
-    }
+//    @Override
+//    public void deleteUser(User u) throws DataAccessException {
+//
+//    }
 }

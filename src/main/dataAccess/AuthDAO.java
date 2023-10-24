@@ -1,6 +1,7 @@
 package dataAccess;
 
 import model.AuthToken;
+import model.User;
 
 import java.util.ArrayList;
 
@@ -28,5 +29,8 @@ public interface AuthDAO {
      */
     static void clear() {
         authDB.clear();
+    };
+    static void createAuth(AuthToken u) throws DataAccessException {
+        authDB.add(u);
     };
 }

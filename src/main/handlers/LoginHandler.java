@@ -1,5 +1,6 @@
 package handlers;
 
+import org.eclipse.jetty.http.HttpStatus;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 import responses.LoginResponse;
@@ -17,30 +18,29 @@ import java.util.Objects;
 public class LoginHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        String body = request.body();
-        String[] bodyList = body.split("[:\n]");
-        String username = bodyList[2];
-        String password = bodyList[4];
         boolean successful = false;
         LoginResponse result = new LoginResponse();
-
         try {
             LoginRequest req = new Gson().fromJson(request.body(), LoginRequest.class);
-            if (req.getPassword() != null & req.getUsername() != null) {
+
+            if (req.getPassword() != null && req.getUsername() != null) {
                 LoginService service = new LoginService();
                 result = service.login(req);
-                if (Objects.equals(result.getMessage(), "200")) {
+
+                if (Objects.equals(result.getMessage(), "Success!")) {
                     successful = true;
+                    response.status(HttpStatus.OK_200);
                 }
             }
             if (!successful) {
                 response.status(400);
+                result.setMessage("Error");
             }
         }
         catch (Exception e) {
-            response.status(500);
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
         }
-        //return new Gson().toJson(response);
-        return new Gson().toJson(result);
+        response.body(new Gson().toJson(result, LoginResponse.class));
+        return response.body();
     }
 }

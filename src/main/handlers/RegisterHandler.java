@@ -23,11 +23,6 @@ import java.util.UUID;
 public class RegisterHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-//        String body = request.body();
-//        String[] bodyList = body.split("[:\n]");
-//        String username = bodyList[2];
-//        String password = bodyList[4];
-//        String email = bodyList[6];
         boolean successful = false;
         RegisterResponse result = new RegisterResponse();
         try {

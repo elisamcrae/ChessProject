@@ -4,6 +4,7 @@ import model.AuthToken;
 import model.User;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Stores and retrieves user objects
@@ -24,13 +25,32 @@ public interface UserDAO {
      * @return  the user object correlating to the authentication token given
      * @throws DataAccessException  exception thrown if the database cannot be accessed properly
      */
-    User getUser(AuthToken a) throws DataAccessException;
+    static User getUser(AuthToken a) throws DataAccessException {
+        for(int i = 0; i < userDB.size(); ++i) {
+            if (userDB.get(i).getUserID() == a.getUserID()) {
+                return userDB.get(i);
+            }
+        }
+        return null;
+    }
+
+    static User getUserByUsername(String username) throws DataAccessException {
+        for(int i = 0; i < userDB.size(); ++i) {
+            if (Objects.equals(userDB.get(i).getUsername(), username)) {
+                return userDB.get(i);
+            }
+        }
+        return null;
+    }
     /**
      * Deletes the user from the database.
      * @param u the user object to be deleted
      * @throws DataAccessException exception thrown if the database cannot be accessed properly
      */
-    void deleteUser(User u) throws DataAccessException;
+    static void deleteUser(User u) throws DataAccessException {
+        userDB.remove(u);
+    }
+
     /**
      * Clears all the information within the database by deleting all users.
      */
