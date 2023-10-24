@@ -18,6 +18,22 @@ public class AuthToken {
         userID = -10000;
     }
 
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
     public AuthToken(int userID) {
         this.userID = userID;
         this.authToken = UUID.randomUUID().toString();

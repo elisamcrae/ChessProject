@@ -1,5 +1,7 @@
 package responses;
 
+import model.AuthToken;
+
 /**
  * HTTP response information when attempting to register a new user
  */
@@ -8,6 +10,16 @@ public class RegisterResponse {
     private String username;
     private String password;
     private String email;
+    private String authToken;
+    //private int userID;
+
+//    public int getUserID() {
+//        return userID;
+//    }
+//
+//    public void setUserID(int userID) {
+//        this.userID = userID;
+//    }
 
     public RegisterResponse() {
     }
@@ -74,5 +86,13 @@ public class RegisterResponse {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAuth() {
+        return authToken;
+    }
+
+    public void setAuth(String auth) {
+        this.authToken = auth;
     }
 }

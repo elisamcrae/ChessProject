@@ -2,6 +2,7 @@ package services;
 
 import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
+import model.AuthToken;
 import model.User;
 import requests.RegisterRequest;
 import responses.RegisterResponse;
@@ -22,21 +23,24 @@ public class RegisterService {
             RegisterResponse rr = new RegisterResponse();
             if (!UserDAO.contains(u)) {
                 UserDAO.createUser(u);
-                rr.setMessage("200");
+                rr.setMessage("Success!");
                 rr.setUsername(r.getUsername());
                 rr.setPassword(r.getPassword());
                 rr.setEmail(r.getEmail());
+                //rr.setUserID(u.getUserID());
+                AuthToken a = new AuthToken(u.getUserID());
+                rr.setAuth(a.getAuthToken());
                 return rr;
             }
             else {
-                rr.setMessage("400");
+                rr.setMessage("Error - 400");
                 return rr;
             }
         }
         catch(DataAccessException e) {
             //Bad request
             RegisterResponse rr = new RegisterResponse();
-            rr.setMessage("500");
+            rr.setMessage("Error - 500");
             return rr;
         }
     }

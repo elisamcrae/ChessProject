@@ -19,19 +19,20 @@ public class ClearHandler implements Route {
     public Object handle(Request request, Response response) throws Exception {
         boolean successful = false;
         ClearResponse result = new ClearResponse();
-
         try {
             ClearApplicationService clear = new ClearApplicationService();
             clear.clearApplication();
             successful = true;
-            result.setMessage("200");
+            result.setMessage("Success!");
+            response.status(HttpStatus.OK_200);
             if (!successful) {
-                result.setMessage("400");
+                response.status(400);
+                result.setMessage("Error");
             }
         }
         catch (Exception e) {
-            result.setMessage("500");
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
         }
-        return new Gson().toJson(result);
+        return new Gson().toJson(result, ClearResponse.class);
     }
 }

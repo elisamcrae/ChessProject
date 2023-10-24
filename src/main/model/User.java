@@ -7,6 +7,8 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private int userID;
+    static private int count = 0;
 
     /**
      * Resets the username, password, and email strings by setting them all equal to blank strings.
@@ -21,6 +23,15 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.userID = ++count;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public String getUsername() {
