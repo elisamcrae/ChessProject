@@ -33,14 +33,14 @@ public class RegisterService {
                 return rr;
             }
             else {
-                rr.setMessage("Error - 400");
+                rr.setMessage("Error: already taken");
                 return rr;
             }
         }
         catch(DataAccessException e) {
             //Bad request
             RegisterResponse rr = new RegisterResponse();
-            rr.setMessage("Error - 500");
+            rr.setMessage("Error: cannot complete request");
             return rr;
         }
     }

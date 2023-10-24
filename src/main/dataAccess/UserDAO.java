@@ -58,6 +58,11 @@ public interface UserDAO {
         userDB.clear();
     };
     static boolean contains(User u) {
+        for(int i = 0; i < userDB.size(); ++i) {
+            if (Objects.equals(userDB.get(i).getUsername(), u.getUsername()) && Objects.equals(userDB.get(i).getPassword(), u.getPassword()) && Objects.equals(userDB.get(i).getEmail(), u.getEmail())) {
+                return true;
+            }
+        }
         if (userDB.contains(u)) {
             return true;
         }

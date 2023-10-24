@@ -37,10 +37,17 @@ public class RegisterHandler implements Route {
                     response.status(HttpStatus.OK_200);
                 }
             }
-            if (!successful) {
-                response.status(400);
-                result.setMessage("Error");
+            if (!successful & Objects.equals(result.getMessage(), "Error: already taken")) {
+                response.status(HttpStatus.FORBIDDEN_403);
+                //result.setMessage("Error");
             }
+            if (req.getEmail() == null | req.getPassword() == null | req.getUsername() == null) {
+                response.status(HttpStatus.BAD_REQUEST_400);
+                result.setMessage("Error: bad request");
+            }
+//            else {
+//                response.status(HttpStatus.BAD_REQUEST_400);
+//            }
         }
         catch (Exception e) {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
