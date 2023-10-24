@@ -15,7 +15,14 @@ public interface GameDAO {
      * @param g the game object to be stored in the database
      * @throws DataAccessException  exception thrown if the database cannot be accessed properly
      */
-    void createGame(Game g) throws DataAccessException;
+    static boolean createGame(Game g, String auth) throws DataAccessException {
+        if (AuthDAO.isFound(auth)) {
+            gameDB.add(g);
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Returns a game object that correlates to the parameter game ID.
      * @param gameID    the string ID correlating to the game object

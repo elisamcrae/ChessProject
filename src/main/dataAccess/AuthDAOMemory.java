@@ -11,14 +11,5 @@ import java.util.ArrayList;
 public class AuthDAOMemory implements AuthDAO{
     private static ArrayList<AuthToken> authDatabase = new ArrayList<>();
 
-    @Override
-    public void updateAuthToken(AuthToken a) throws DataAccessException {
-
-    }
-
-    @Override
-    public void deleteAuthToken(AuthToken a) throws DataAccessException {
-
-    }
 
 }

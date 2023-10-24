@@ -11,6 +11,7 @@ public class Game {
     private String blackUsername;
     private String gameName;
     private ChessGameE game;
+    static int counter = 0;
 
     /**
      * Resets the game ID, white username, black username, game name, and chess board by
@@ -32,12 +33,12 @@ public class Game {
      * @param gameName  name of the game - does not have to be unique
      * @param game  chessGame game
      */
-    public Game(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGameE game) {
-        this.gameID = gameID;
+    public Game(String whiteUsername, String blackUsername, String gameName) {
+        this.gameID = ++counter;
         this.whiteUsername = whiteUsername;
         this.blackUsername = blackUsername;
         this.gameName = gameName;
-        this.game = game;
+        this.game = new ChessGameE();
     }
 
     public int getGameID() {

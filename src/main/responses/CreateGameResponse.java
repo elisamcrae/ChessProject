@@ -9,6 +9,15 @@ public class CreateGameResponse {
     private String gameName;
     private String whiteUsername;
     private String blackusername;
+    private int gameID;
+
+    public int getGameID() {
+        return gameID;
+    }
+
+    public void setGameID(int gameID) {
+        this.gameID = gameID;
+    }
 
     /**
      * Returns the message of the createGame response.
@@ -74,9 +83,4 @@ public class CreateGameResponse {
         this.blackusername = blackusername;
     }
 
-    /**
-     * Empty constructor to create a game response.
-     */
-    public CreateGameResponse() {
-    }
 }

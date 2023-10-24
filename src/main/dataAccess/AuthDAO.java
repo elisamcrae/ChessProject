@@ -4,25 +4,14 @@ import model.AuthToken;
 import model.User;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Stores and retrieves authentication token objects
  */
 public interface AuthDAO {
     ArrayList<AuthToken> authDB = new ArrayList<>();
-    /**
-     * Updates the authentication token by matching the information to the
-     * parameter authentication token object.
-     * @param a the authentication object with the updated information to be added to the database
-     * @throws DataAccessException  exception thrown if the database cannot be accessed properly
-     */
-    void updateAuthToken(AuthToken a) throws DataAccessException;
-    /**
-     * Deletes the authentication token from the database.
-     * @param a the authentication token object to be deleted
-     * @throws DataAccessException  exception thrown if the database cannot be accessed properly
-     */
-    void deleteAuthToken(AuthToken a) throws DataAccessException;
+
     /**
      * Clears all the information within the database by deleting all authentication tokens.
      * @throws DataAccessException  exception thrown if the database cannot be accessed properly
@@ -33,4 +22,29 @@ public interface AuthDAO {
     static void createAuth(AuthToken u) throws DataAccessException {
         authDB.add(u);
     };
+
+    static boolean delete(String auth) throws DataAccessException {
+        if (authDB.isEmpty()) {
+            return true;
+        }
+        for(int i = 0; i < authDB.size(); ++i) {
+            if (Objects.equals(authDB.get(i).getAuthToken(), auth)) {
+                authDB.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static boolean isFound(String auth) throws DataAccessException {
+        if (authDB.isEmpty()) {
+            return false;
+        }
+        for (AuthToken authToken : authDB) {
+            if (Objects.equals(authToken.getAuthToken(), auth)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

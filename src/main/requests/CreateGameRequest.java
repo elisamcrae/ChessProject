@@ -7,6 +7,15 @@ public class CreateGameRequest {
     private String gameName;
     private String whiteUsername;
     private String blackUsername;
+    private String authToken;
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
 
     /**
      * Returns the name of the current game.

@@ -1,5 +1,6 @@
 package services;
 
+import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
 import model.AuthToken;
@@ -29,6 +30,7 @@ public class RegisterService {
                 rr.setEmail(r.getEmail());
                 //rr.setUserID(u.getUserID());
                 AuthToken a = new AuthToken(u.getUserID());
+                AuthDAO.createAuth(a);
                 rr.setAuth(a.getAuthToken());
                 return rr;
             }

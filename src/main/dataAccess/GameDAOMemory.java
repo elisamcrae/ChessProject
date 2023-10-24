@@ -13,11 +13,6 @@ public class GameDAOMemory implements GameDAO{
     private static ArrayList<Game> gameDatabase = new ArrayList<>();
 
     @Override
-    public void createGame(Game g) throws DataAccessException {
-        gameDatabase.add(g);
-    }
-
-    @Override
     public Game getGame(String gameID) throws DataAccessException {
         return null;
     }

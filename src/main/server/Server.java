@@ -30,7 +30,7 @@ public class Server {
         Spark.post("/user", new RegisterHandler());
         Spark.post("/game", new CreateGameHandler());
         Spark.delete("/db", new ClearHandler());
-        Spark.delete("/session", new DeleteHandler());
+        Spark.delete("/session", new LogoutHandler());
         Spark.get("/game", new ListGamesHandler());
         Spark.put("/game", new JoinGameHandler());
     }
