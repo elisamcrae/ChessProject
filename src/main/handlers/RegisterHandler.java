@@ -1,28 +1,19 @@
 package handlers;
 
 import com.google.gson.Gson;
-import model.AuthToken;
 import org.eclipse.jetty.http.HttpStatus;
-import requests.LoginRequest;
 import requests.RegisterRequest;
-import responses.ClearResponse;
-import responses.LoginResponse;
 import responses.RegisterResponse;
-import services.ClearApplicationService;
-import services.LoginService;
 import services.RegisterService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-import spark.Spark;
 
-import java.util.ArrayList;
 import java.util.Objects;
-import java.util.UUID;
 
 public class RegisterHandler implements Route {
     @Override
-    public Object handle(Request request, Response response) throws Exception {
+    public Object handle(Request request, Response response) {
         boolean successful = false;
         RegisterResponse result = new RegisterResponse();
         try {
@@ -39,15 +30,11 @@ public class RegisterHandler implements Route {
             }
             if (!successful & Objects.equals(result.getMessage(), "Error: already taken")) {
                 response.status(HttpStatus.FORBIDDEN_403);
-                //result.setMessage("Error");
             }
             if (req.getEmail() == null | req.getPassword() == null | req.getUsername() == null) {
                 response.status(HttpStatus.BAD_REQUEST_400);
                 result.setMessage("Error: bad request");
             }
-//            else {
-//                response.status(HttpStatus.BAD_REQUEST_400);
-//            }
         }
         catch (Exception e) {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);

@@ -1,7 +1,6 @@
 package dataAccess;
 
 import model.AuthToken;
-import model.User;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -10,11 +9,10 @@ import java.util.Objects;
  * Stores and retrieves authentication token objects
  */
 public interface AuthDAO {
-    ArrayList<AuthToken> authDB = new ArrayList<>();
+    ArrayList<AuthToken> authDB = AuthDAOMemory.getAuthDatabase();
 
     /**
      * Clears all the information within the database by deleting all authentication tokens.
-     * @throws DataAccessException  exception thrown if the database cannot be accessed properly
      */
     static void clear() {
         authDB.clear();
@@ -49,9 +47,9 @@ public interface AuthDAO {
     }
 
     static int getUserID(String auth) {
-        for (int i = 0; i < authDB.size(); ++i) {
-            if (Objects.equals(authDB.get(i).getAuthToken(), auth)) {
-                return authDB.get(i).getUserID();
+        for (AuthToken authToken : authDB) {
+            if (Objects.equals(authToken.getAuthToken(), auth)) {
+                return authToken.getUserID();
             }
         }
         return -10000;

@@ -11,7 +11,7 @@ import java.util.Objects;
  * Stores and retrieves game objects
  */
 public interface GameDAO {
-    ArrayList<Game> gameDB = new ArrayList<>();
+    ArrayList<Game> gameDB = GameDAOMemory.getGameDatabase();
     /**
      * Creates a game in the database given the game object
      * @param g the game object to be stored in the database
@@ -26,8 +26,8 @@ public interface GameDAO {
     }
 
     static boolean isFound(int gameID) {
-        for(int i = 0; i < gameDB.size(); ++i) {
-            if (gameDB.get(i).getGameID() == gameID) {
+        for (Game game : gameDB) {
+            if (game.getGameID() == gameID) {
                 return true;
             }
         }
@@ -41,17 +41,16 @@ public interface GameDAO {
      * @throws DataAccessException  exception thrown if the database cannot be accessed properly
      */
     Game getGame(String gameID) throws DataAccessException;
-    /**
-     * Returns all past and current games that are in the database.
-     * @return  the array list of game objects currently in the database
-     * @throws DataAccessException  exception thrown if the database cannot be accessed properly
-     */
-    ArrayList<Game> getAllGames() throws DataAccessException;
+
     /**
      * Claims the spot for a player into a new game.
      * The input user's username will be stored as either the white or black player's username.
-     * @param u the user object to be added into the new game
-     * @throws DataAccessException  exception thrown if the database cannot be accessed properly
+     *
+     * @param gameID    the int ID associated with the game to be watched
+     * @param playerColor   the string with the color name the player will be. A null playerColor will be an observer
+     * @param auth  the authentication token to be checked before adding a player to the game
+     * @return  true if the player was added to the game and false otherwise
+     * @throws DataAccessException  the data could not be accessed
      */
     static boolean claimSpot(int gameID, String playerColor, String auth) throws DataAccessException {
         int userID = AuthDAO.getUserID(auth);
@@ -59,21 +58,18 @@ public interface GameDAO {
         if (userID == -10000 | username == null) {
             return false;
         }
-        for (int i = 0; i < gameDB.size(); ++i) {
-            if (gameDB.get(i).getGameID() == gameID) {
-                if (Objects.equals(playerColor, "WHITE") && gameDB.get(i).getWhiteUsername() == null) {
-                    gameDB.get(i).setWhiteUsername(username);
+        for (Game game : gameDB) {
+            if (game.getGameID() == gameID) {
+                if (Objects.equals(playerColor, "WHITE") && game.getWhiteUsername() == null) {
+                    game.setWhiteUsername(username);
                     return true;
-                }
-                else if (Objects.equals(playerColor, "BLACK") && gameDB.get(i).getBlackUsername() == null) {
-                    gameDB.get(i).setBlackUsername(username);
+                } else if (Objects.equals(playerColor, "BLACK") && game.getBlackUsername() == null) {
+                    game.setBlackUsername(username);
                     return true;
-                }
-                else if (Objects.equals(playerColor, "") | playerColor == null) {
-                    gameDB.get(i).addObserver(username);
+                } else if (Objects.equals(playerColor, "") | playerColor == null) {
+                    game.addObserver(username);
                     return true;
-                }
-                else {
+                } else {
                     return false;
                 }
             }
@@ -94,7 +90,6 @@ public interface GameDAO {
     void deleteGame(Game g) throws DataAccessException;
     /**
      * Clears all the information within the database by deleting all games.
-     * @throws DataAccessException  exception thrown if the database cannot be accessed properly
      */
     static void clear() {
         gameDB.clear();

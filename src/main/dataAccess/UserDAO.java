@@ -10,7 +10,7 @@ import java.util.Objects;
  * Stores and retrieves user objects
  */
 public interface UserDAO {
-    ArrayList<User> userDB = new ArrayList<>();
+    ArrayList<User> userDB = UserDAOMemory.getUserDatabase();
     /**
      * Creates a user in the database given the user object
      * @param u the user object to be stored in the database
@@ -58,21 +58,18 @@ public interface UserDAO {
         userDB.clear();
     };
     static boolean contains(User u) {
-        for(int i = 0; i < userDB.size(); ++i) {
-            if (Objects.equals(userDB.get(i).getUsername(), u.getUsername()) && Objects.equals(userDB.get(i).getPassword(), u.getPassword()) && Objects.equals(userDB.get(i).getEmail(), u.getEmail())) {
+        for (User user : userDB) {
+            if (Objects.equals(user.getUsername(), u.getUsername()) && Objects.equals(user.getPassword(), u.getPassword()) && Objects.equals(user.getEmail(), u.getEmail())) {
                 return true;
             }
         }
-        if (userDB.contains(u)) {
-            return true;
-        }
-        return false;
+        return userDB.contains(u);
     }
 
     static String getUsername(int userID) {
-        for(int i = 0; i < userDB.size(); ++i) {
-            if (userDB.get(i).getUserID() == userID) {
-                return userDB.get(i).getUsername();
+        for (User user : userDB) {
+            if (user.getUserID() == userID) {
+                return user.getUsername();
             }
         }
         return null;

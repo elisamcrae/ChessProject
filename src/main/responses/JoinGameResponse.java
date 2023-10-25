@@ -4,8 +4,8 @@ package responses;
  * HTTP response information when attempting to join a chess game
  */
 public class JoinGameResponse {
-    private Boolean success;
     private String message;
+    private String gameID;
 
     public String getMessage() {
         return message;
@@ -13,14 +13,6 @@ public class JoinGameResponse {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    private String gameID;
-
-    /**
-     * Empty constructor to create a join game response.
-     */
-    public JoinGameResponse() {
     }
 
     /**

@@ -12,14 +12,17 @@ import java.util.ArrayList;
 public class GameDAOMemory implements GameDAO{
     private static ArrayList<Game> gameDatabase = new ArrayList<>();
 
-    @Override
-    public Game getGame(String gameID) throws DataAccessException {
-        return null;
+    public static ArrayList<Game> getGameDatabase() {
+        return gameDatabase;
+    }
+
+    public static void setGameDatabase(ArrayList<Game> gameDatabase) {
+        GameDAOMemory.gameDatabase = gameDatabase;
     }
 
     @Override
-    public ArrayList<Game> getAllGames() throws DataAccessException {
-        return gameDatabase;
+    public Game getGame(String gameID) throws DataAccessException {
+        return null;
     }
 
     @Override

@@ -18,17 +18,18 @@ public class RegisterService {
      * @param r the HTTP request to register a user
      * @return  the HTTP response to the register user request
      */
-    public RegisterResponse register(RegisterRequest r) throws DataAccessException {
+    public RegisterResponse register(RegisterRequest r) {
+        RegisterResponse rr = new RegisterResponse();
         try {
             User u = new User(r.getUsername(), r.getPassword(), r.getEmail());
-            RegisterResponse rr = new RegisterResponse();
             if (!UserDAO.contains(u)) {
                 UserDAO.createUser(u);
+
                 rr.setMessage("Success!");
                 rr.setUsername(r.getUsername());
                 rr.setPassword(r.getPassword());
                 rr.setEmail(r.getEmail());
-                //rr.setUserID(u.getUserID());
+
                 AuthToken a = new AuthToken(u.getUserID());
                 AuthDAO.createAuth(a);
                 rr.setAuth(a.getAuthToken());
@@ -40,13 +41,8 @@ public class RegisterService {
             }
         }
         catch(DataAccessException e) {
-            //Bad request
-            RegisterResponse rr = new RegisterResponse();
             rr.setMessage("Error: cannot complete request");
             return rr;
         }
-    }
-
-    public RegisterService() {
     }
 }

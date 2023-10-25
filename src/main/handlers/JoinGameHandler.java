@@ -3,11 +3,8 @@ package handlers;
 import com.google.gson.Gson;
 import org.eclipse.jetty.http.HttpStatus;
 import requests.JoinGameRequest;
-import requests.RegisterRequest;
 import responses.JoinGameResponse;
-import responses.RegisterResponse;
 import services.JoinGameService;
-import services.RegisterService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -16,7 +13,7 @@ import java.util.Objects;
 
 public class JoinGameHandler implements Route {
     @Override
-    public Object handle(Request request, Response response) throws Exception {
+    public Object handle(Request request, Response response) {
         boolean successful = false;
         JoinGameResponse result = new JoinGameResponse();
         try {

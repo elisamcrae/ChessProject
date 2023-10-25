@@ -56,10 +56,4 @@ public class LoginResponse {
         this.username = username;
     }
 
-    /**
-     * Empty constructor for the login response.
-     */
-    public LoginResponse() {
-    }
-
 }

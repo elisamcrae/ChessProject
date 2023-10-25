@@ -1,5 +1,4 @@
 package services;
-//Spark.externalStaticFileLocation("path/to/web/folder");
 
 
 import dataAccess.AuthDAO;
@@ -19,8 +18,5 @@ public class ClearApplicationService {
         AuthDAO.clear();
         UserDAO.clear();
         GameDAO.clear();
-    }
-
-    public ClearApplicationService() {
     }
 }

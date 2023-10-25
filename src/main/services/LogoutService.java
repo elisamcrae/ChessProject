@@ -2,7 +2,6 @@ package services;
 
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
-import model.AuthToken;
 import requests.LogoutRequest;
 import responses.LogoutResponse;
 
@@ -14,7 +13,7 @@ public class LogoutService {
     /**
      * Service that logs the user out by deleting the current ongoing session.
      * User is logged out only based on the authentication token.
-     * @param r the authentication token of the current user logged in
+     * @param req the logout request which contains the authentication token of the current user logged in
      */
     public LogoutResponse logout(LogoutRequest req) {
         LogoutResponse r = new LogoutResponse();
@@ -26,12 +25,11 @@ public class LogoutService {
             boolean didItWork = AuthDAO.delete(req.getAuthToken());
             if (didItWork) {
                 r.setMessage("Success!");
-                return r;
             }
             else {
                 r.setMessage("Error: unauthorized");
-                return r;
             }
+            return r;
         }
         catch (DataAccessException e) {
             r.setMessage("Error: Cannot access data");

@@ -11,11 +11,6 @@ public class JoinGameRequest {
     public String getPlayerColor() {
         return playerColor;
     }
-
-    public void setPlayerColor(String playerColor) {
-        this.playerColor = playerColor;
-    }
-
     public String getAuthToken() {
         return authToken;
     }
@@ -51,5 +46,4 @@ public class JoinGameRequest {
         this.playerColor = playerColor;
         this.gameID = gameID;
     }
-
 }

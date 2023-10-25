@@ -2,21 +2,15 @@ package handlers;
 
 import com.google.gson.Gson;
 import org.eclipse.jetty.http.HttpStatus;
-import requests.LoginRequest;
 import responses.ClearResponse;
-import responses.LoginResponse;
-import responses.RegisterResponse;
 import services.ClearApplicationService;
-import services.LoginService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import java.io.IOException;
-
 public class ClearHandler implements Route {
     @Override
-    public Object handle(Request request, Response response) throws Exception {
+    public Object handle(Request request, Response response) {
         boolean successful = false;
         ClearResponse result = new ClearResponse();
         try {

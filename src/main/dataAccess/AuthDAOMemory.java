@@ -11,5 +11,7 @@ import java.util.ArrayList;
 public class AuthDAOMemory implements AuthDAO{
     private static ArrayList<AuthToken> authDatabase = new ArrayList<>();
 
-
+    public static ArrayList<AuthToken> getAuthDatabase() {
+        return authDatabase;
+    }
 }

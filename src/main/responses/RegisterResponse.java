@@ -11,18 +11,6 @@ public class RegisterResponse {
     private String password;
     private String email;
     private String authToken;
-    //private int userID;
-
-//    public int getUserID() {
-//        return userID;
-//    }
-//
-//    public void setUserID(int userID) {
-//        this.userID = userID;
-//    }
-
-    public RegisterResponse() {
-    }
 
     /**
      * Returns the message for the register response.
@@ -86,10 +74,6 @@ public class RegisterResponse {
      */
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getAuth() {
-        return authToken;
     }
 
     public void setAuth(String auth) {

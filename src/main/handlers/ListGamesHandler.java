@@ -1,27 +1,18 @@
 package handlers;
 
-import chess.ChessGameE;
 import com.google.gson.Gson;
 import org.eclipse.jetty.http.HttpStatus;
-import requests.JoinGameRequest;
-import requests.RegisterRequest;
-import responses.JoinGameResponse;
 import responses.ListGamesResponse;
-import responses.RegisterResponse;
-import services.JoinGameService;
 import services.ListGamesService;
-import services.RegisterService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class ListGamesHandler implements Route {
-    //IS THIS RIGHT???
     @Override
-    public Object handle(Request request, Response response) throws Exception {
+    public Object handle(Request request, Response response) {
         boolean successful = false;
         ListGamesResponse result = new ListGamesResponse();
         try {

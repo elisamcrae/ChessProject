@@ -30,10 +30,6 @@ public class AuthToken {
         return userID;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
     public AuthToken(int userID) {
         this.userID = userID;
         this.authToken = UUID.randomUUID().toString();

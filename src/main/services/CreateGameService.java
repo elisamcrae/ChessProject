@@ -15,6 +15,7 @@ public class CreateGameService {
      * Service that responds to an HTTP request to create a new chess game.
      * Request will include the game name, white username, and black username.
      * A new gameID will be created for the new game.
+     *
      * @param r the HTTP request to create a new game
      * @return  the HTTP response to the request to create a new game
      */
@@ -22,7 +23,6 @@ public class CreateGameService {
         CreateGameResponse response = new CreateGameResponse();
         try {
             boolean worked = AuthDAO.isFound(r.getAuthToken());
-            //boolean worked =
             if (worked) {
                 Game g = new Game(r.getWhiteUsername(), r.getBlackUsername(), r.getGameName());
                 g.setGameID();
@@ -40,5 +40,4 @@ public class CreateGameService {
             return response;
         }
     }
-
 }

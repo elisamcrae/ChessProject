@@ -41,13 +41,6 @@ public class CreateGameRequest {
         return whiteUsername;
     }
 
-    /**
-     * Sets the current white player username to the string parameter.
-     * @param whiteUsername the string to which the current white username should be set
-     */
-    public void setWhiteUsername(String whiteUsername) {
-        this.whiteUsername = whiteUsername;
-    }
 
     /**
      * Returns the username for the black player.
@@ -55,14 +48,6 @@ public class CreateGameRequest {
      */
     public String getBlackUsername() {
         return blackUsername;
-    }
-
-    /**
-     * Sets the current black player username to the string parameter.
-     * @param blackUsername the string to which the current black username should be set
-     */
-    public void setBlackUsername(String blackUsername) {
-        this.blackUsername = blackUsername;
     }
 
     /**

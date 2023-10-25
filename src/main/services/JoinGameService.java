@@ -15,6 +15,7 @@ public class JoinGameService {
 
     /**
      * Service to join a game of chess by passing in the corresponding HTTP request.
+     *
      * @param r the HTTP request to join a game
      * @return  the HTTP response to the request to join a game
      */

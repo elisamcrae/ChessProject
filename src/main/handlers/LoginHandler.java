@@ -2,12 +2,9 @@ package handlers;
 
 import org.eclipse.jetty.http.HttpStatus;
 import requests.LoginRequest;
-import requests.RegisterRequest;
 import responses.LoginResponse;
-import responses.RegisterResponse;
 import services.LoginService;
 import com.google.gson.Gson;
-import services.RegisterService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -17,7 +14,7 @@ import java.util.Objects;
 
 public class LoginHandler implements Route {
     @Override
-    public Object handle(Request request, Response response) throws Exception {
+    public Object handle(Request request, Response response) {
         boolean successful = false;
         LoginResponse result = new LoginResponse();
         try {

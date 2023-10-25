@@ -1,6 +1,5 @@
 package services;
 
-import chess.ChessGameE;
 import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
 import model.Game;
@@ -15,6 +14,8 @@ public class ListGamesService {
 
     /**
      * Lists all the past and previous games that have been played.
+     *
+     * @param auth  the authentication token of the user making the request
      * @return  the array list of all chess games that are in the database
      */
     public ListGamesResponse listGames(String auth) {

@@ -20,10 +20,6 @@ public class Game {
         this.gameID = gameID;
     }
 
-    public ArrayList<String> getObservers() {
-        return observers;
-    }
-
     public void addObserver(String observer) {
         this.observers.add(observer);
     }
@@ -41,11 +37,9 @@ public class Game {
 
     /**
      * Constructor to create a new game object.
-     * @param gameID    unique game number
      * @param whiteUsername string username for white player
      * @param blackUsername string username for black player
      * @param gameName  name of the game - does not have to be unique
-     * @param game  chessGame game
      */
     public Game(String whiteUsername, String blackUsername, String gameName) {
         this.whiteUsername = whiteUsername;

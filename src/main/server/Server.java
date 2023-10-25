@@ -1,17 +1,6 @@
 package server;
 import handlers.*;
-import model.AuthToken;
-import requests.CreateGameRequest;
-import requests.LoginRequest;
-import requests.RegisterRequest;
-import responses.LoginResponse;
-import services.*;
-import spark.Request;
-import spark.Response;
 import spark.Spark;
-
-import static spark.Spark.delete;
-import static spark.Spark.post;
 
 public class Server {
     public static void main(String[] args) {
