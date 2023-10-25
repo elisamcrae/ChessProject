@@ -1,5 +1,8 @@
 package services;
 
+import dataAccess.AuthDAO;
+import dataAccess.DataAccessException;
+import dataAccess.GameDAO;
 import requests.JoinGameRequest;
 import responses.JoinGameResponse;
 
@@ -15,7 +18,27 @@ public class JoinGameService {
      * @param r the HTTP request to join a game
      * @return  the HTTP response to the request to join a game
      */
-    JoinGameResponse joinGame(JoinGameRequest r) {
-        return null;
+    public JoinGameResponse joinGame(JoinGameRequest r) {
+        JoinGameResponse response = new JoinGameResponse();
+        try {
+            if (!AuthDAO.isFound(r.getAuthToken())) {
+                response.setMessage("Error: unauthorized");
+            }
+            if (!GameDAO.isFound(r.getGameID())) {
+                response.setMessage("Error: unauthorized");
+            }
+            else {
+                boolean worked = GameDAO.claimSpot(r.getGameID(), r.getPlayerColor(), r.getAuthToken());
+                if (worked) {
+                    response.setMessage("Success!");
+                }
+                else {
+                    response.setMessage("Error: already taken");
+                }
+            }
+        } catch (DataAccessException e) {
+            response.setMessage("Error: Cannot fulfill request");
+        }
+        return response;
     }
 }

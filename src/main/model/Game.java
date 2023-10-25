@@ -2,6 +2,8 @@ package model;
 
 import chess.ChessGameE;
 
+import java.util.ArrayList;
+
 /**
  * Object used for passing and collecting chess game information
  */
@@ -11,8 +13,20 @@ public class Game {
     private String blackUsername;
     private String gameName;
     private ChessGameE game;
-    static int counter = 0;
+    static int counter = 1;
+    private ArrayList<String> observers = new ArrayList<>();
 
+    public void setGameID(int gameID) {
+        this.gameID = gameID;
+    }
+
+    public ArrayList<String> getObservers() {
+        return observers;
+    }
+
+    public void addObserver(String observer) {
+        this.observers.add(observer);
+    }
     /**
      * Resets the game ID, white username, black username, game name, and chess board by
      * setting them equal to -10000 or blank strings.
@@ -34,7 +48,6 @@ public class Game {
      * @param game  chessGame game
      */
     public Game(String whiteUsername, String blackUsername, String gameName) {
-        this.gameID = ++counter;
         this.whiteUsername = whiteUsername;
         this.blackUsername = blackUsername;
         this.gameName = gameName;
@@ -45,8 +58,8 @@ public class Game {
         return gameID;
     }
 
-    public void setGameID(int gameID) {
-        this.gameID = gameID;
+    public void setGameID() {
+        this.gameID = counter++;
     }
 
     public String getWhiteUsername() {

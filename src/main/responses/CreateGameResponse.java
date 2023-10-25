@@ -9,7 +9,7 @@ public class CreateGameResponse {
     private String gameName;
     private String whiteUsername;
     private String blackusername;
-    private int gameID;
+    private Integer gameID;
 
     public int getGameID() {
         return gameID;

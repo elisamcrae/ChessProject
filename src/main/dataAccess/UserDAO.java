@@ -68,4 +68,13 @@ public interface UserDAO {
         }
         return false;
     }
+
+    static String getUsername(int userID) {
+        for(int i = 0; i < userDB.size(); ++i) {
+            if (userDB.get(i).getUserID() == userID) {
+                return userDB.get(i).getUsername();
+            }
+        }
+        return null;
+    }
 }

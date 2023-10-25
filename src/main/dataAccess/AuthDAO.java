@@ -25,7 +25,7 @@ public interface AuthDAO {
 
     static boolean delete(String auth) throws DataAccessException {
         if (authDB.isEmpty()) {
-            return true;
+            return false;
         }
         for(int i = 0; i < authDB.size(); ++i) {
             if (Objects.equals(authDB.get(i).getAuthToken(), auth)) {
@@ -46,5 +46,14 @@ public interface AuthDAO {
             }
         }
         return false;
+    }
+
+    static int getUserID(String auth) {
+        for (int i = 0; i < authDB.size(); ++i) {
+            if (Objects.equals(authDB.get(i).getAuthToken(), auth)) {
+                return authDB.get(i).getUserID();
+            }
+        }
+        return -10000;
     }
 }

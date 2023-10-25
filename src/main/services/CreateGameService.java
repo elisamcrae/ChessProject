@@ -1,5 +1,6 @@
 package services;
 
+import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
 import model.Game;
@@ -20,9 +21,12 @@ public class CreateGameService {
     public CreateGameResponse createGame(CreateGameRequest r) {
         CreateGameResponse response = new CreateGameResponse();
         try {
-            Game g = new Game(r.getWhiteUsername(), r.getBlackUsername(), r.getGameName());
-            boolean worked = GameDAO.createGame(g, r.getAuthToken());
+            boolean worked = AuthDAO.isFound(r.getAuthToken());
+            //boolean worked =
             if (worked) {
+                Game g = new Game(r.getWhiteUsername(), r.getBlackUsername(), r.getGameName());
+                g.setGameID();
+                GameDAO.createGame(g, r.getAuthToken());
                 response.setMessage("Success!");
                 response.setGameID(g.getGameID());
             }

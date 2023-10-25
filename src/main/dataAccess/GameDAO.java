@@ -1,9 +1,11 @@
 package dataAccess;
 
+import chess.ChessGameE;
 import model.Game;
 import model.User;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Stores and retrieves game objects
@@ -19,6 +21,15 @@ public interface GameDAO {
         if (AuthDAO.isFound(auth)) {
             gameDB.add(g);
             return true;
+        }
+        return false;
+    }
+
+    static boolean isFound(int gameID) {
+        for(int i = 0; i < gameDB.size(); ++i) {
+            if (gameDB.get(i).getGameID() == gameID) {
+                return true;
+            }
         }
         return false;
     }
@@ -42,7 +53,30 @@ public interface GameDAO {
      * @param u the user object to be added into the new game
      * @throws DataAccessException  exception thrown if the database cannot be accessed properly
      */
-    void claimSpot(User u) throws DataAccessException;
+    static boolean claimSpot(int gameID, String playerColor, String auth) throws DataAccessException {
+        int userID = AuthDAO.getUserID(auth);
+        String username = UserDAO.getUsername(userID);
+        for (int i = 0; i < gameDB.size(); ++i) {
+            if (gameDB.get(i).getGameID() == gameID) {
+                if (Objects.equals(playerColor, "WHITE") && gameDB.get(i).getWhiteUsername() == null) {
+                    gameDB.get(i).setWhiteUsername(username);
+                    return true;
+                }
+                else if (Objects.equals(playerColor, "BLACK") && gameDB.get(i).getBlackUsername() == null) {
+                    gameDB.get(i).setBlackUsername(username);
+                    return true;
+                }
+                else if (Objects.equals(playerColor, "")) {
+                    gameDB.get(i).addObserver(username);
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
     /**
      * Updates the game by replacing the game's ID with the new ID found in the game object.
      * @param g the game object with the new game ID
@@ -62,4 +96,11 @@ public interface GameDAO {
     static void clear() {
         gameDB.clear();
     };
+
+    static ArrayList<Game> listGames(String auth) throws DataAccessException {
+        if (AuthDAO.isFound(auth)) {
+            return gameDB;
+        }
+        return null;
+    }
 }
