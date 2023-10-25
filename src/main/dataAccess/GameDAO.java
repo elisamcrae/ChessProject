@@ -56,6 +56,9 @@ public interface GameDAO {
     static boolean claimSpot(int gameID, String playerColor, String auth) throws DataAccessException {
         int userID = AuthDAO.getUserID(auth);
         String username = UserDAO.getUsername(userID);
+        if (userID == -10000 | username == null) {
+            return false;
+        }
         for (int i = 0; i < gameDB.size(); ++i) {
             if (gameDB.get(i).getGameID() == gameID) {
                 if (Objects.equals(playerColor, "WHITE") && gameDB.get(i).getWhiteUsername() == null) {

@@ -24,7 +24,7 @@ public class JoinGameService {
             if (!AuthDAO.isFound(r.getAuthToken())) {
                 response.setMessage("Error: unauthorized");
             }
-            if (!GameDAO.isFound(r.getGameID())) {
+            else if (!GameDAO.isFound(r.getGameID())) {
                 response.setMessage("Error: unauthorized");
             }
             else {
