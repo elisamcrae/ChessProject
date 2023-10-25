@@ -25,7 +25,7 @@ public class JoinGameService {
                 response.setMessage("Error: unauthorized");
             }
             else if (!GameDAO.isFound(r.getGameID())) {
-                response.setMessage("Error: unauthorized");
+                response.setMessage("Error: Bad Request");
             }
             else {
                 boolean worked = GameDAO.claimSpot(r.getGameID(), r.getPlayerColor(), r.getAuthToken());

@@ -34,6 +34,9 @@ public class JoinGameHandler implements Route {
             else if (!successful & Objects.equals(result.getMessage(), "Error: already taken")) {
                 response.status(HttpStatus.FORBIDDEN_403);
             }
+            else if (!successful & Objects.equals(result.getMessage(), "Error: Bad Request")) {
+                response.status(HttpStatus.BAD_REQUEST_400);
+            }
         }
         catch (Exception e) {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
