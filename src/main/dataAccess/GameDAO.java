@@ -66,7 +66,7 @@ public interface GameDAO {
                     gameDB.get(i).setBlackUsername(username);
                     return true;
                 }
-                else if (Objects.equals(playerColor, "")) {
+                else if (Objects.equals(playerColor, "") | playerColor == null) {
                     gameDB.get(i).addObserver(username);
                     return true;
                 }
