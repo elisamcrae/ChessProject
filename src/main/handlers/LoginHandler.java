@@ -32,18 +32,19 @@ public class LoginHandler implements Route {
                     response.status(HttpStatus.OK_200);
                 }
             }
-            if (!successful && Objects.equals(result.getMessage(), "Error: unauthorized")) {
+            if (req.getPassword() == null | req.getUsername() == null) {
                 response.status(HttpStatus.UNAUTHORIZED_401);
-                //result.setMessage("Error");
+                result.setMessage("Error: unauthorized");
             }
-            response.body(new Gson().toJson(result, LoginResponse.class));
-            return response.body();
+            else if (!successful && Objects.equals(result.getMessage(), "Error: unauthorized")) {
+                response.status(HttpStatus.UNAUTHORIZED_401);
+            }
         }
         catch (Exception e) {
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
+            result.setMessage("Error: Cannot complete request");
         }
-//        response.body(new Gson().toJson(result, LoginResponse.class));
-//        return response.body();
-        return null;
+        response.body(new Gson().toJson(result, LoginResponse.class));
+        return response.body();
     }
 }
