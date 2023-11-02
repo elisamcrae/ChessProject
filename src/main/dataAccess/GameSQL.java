@@ -23,7 +23,6 @@ public class GameSQL implements GameDAO{
                 preparedStatement.setString(4, json);
                 preparedStatement.setInt(5, g.getGameID());
 
-
                 preparedStatement.execute();
                 toReturn = true;
             } catch (SQLException ex) {
@@ -178,11 +177,15 @@ public class GameSQL implements GameDAO{
         ArrayList<Game> gameslist = new ArrayList<Game>();
 
         var conn = db.getConnection();
-        try (var preparedStatement = conn.prepareStatement("SELECT games FROM game")) {
+        try (var preparedStatement = conn.prepareStatement("SELECT games, whitePlayer, blackPlayer FROM game")) {
             try (var rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
                     var json = rs.getString("games");
+                    var white = rs.getString("whitePlayer");
+                    var black = rs.getString("blackPlayer");
                     Game g = new Gson().fromJson(json, Game.class);
+                    g.setWhiteUsername(white);
+                    g.setBlackUsername(black);
                     gameslist.add(g);
                 }
             }
