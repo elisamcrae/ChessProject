@@ -1,11 +1,10 @@
 package services;
 
-import dataAccess.AuthDAO;
+import dataAccess.AuthSQL;
 import dataAccess.DataAccessException;
-import dataAccess.GameDAO;
+import dataAccess.GameSQL;
 import requests.JoinGameRequest;
 import responses.JoinGameResponse;
-
 /**
  * Verifies that the specified game exists, and, if a color is specified,
  * adds the caller as the requested color to the game.
@@ -15,6 +14,7 @@ public class JoinGameService {
 
     /**
      * Service to join a game of chess by passing in the corresponding HTTP request.
+     * If the request has no player color specified, the user will be added as an observer to the game.
      *
      * @param r the HTTP request to join a game
      * @return  the HTTP response to the request to join a game
@@ -22,14 +22,14 @@ public class JoinGameService {
     public JoinGameResponse joinGame(JoinGameRequest r) {
         JoinGameResponse response = new JoinGameResponse();
         try {
-            if (!AuthDAO.isFound(r.getAuthToken())) {
+            if (!AuthSQL.isFound(r.getAuthToken())) {
                 response.setMessage("Error: unauthorized");
             }
-            else if (!GameDAO.isFound(r.getGameID())) {
+            else if (!GameSQL.isFound(r.getGameID())) {
                 response.setMessage("Error: Bad Request");
             }
             else {
-                boolean worked = GameDAO.claimSpot(r.getGameID(), r.getPlayerColor(), r.getAuthToken());
+                boolean worked = GameSQL.claimSpot(r.getGameID(), r.getPlayerColor(), r.getAuthToken());
                 if (worked) {
                     response.setMessage("Success!");
                 }

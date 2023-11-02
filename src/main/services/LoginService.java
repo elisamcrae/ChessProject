@@ -1,8 +1,8 @@
 package services;
 
-import dataAccess.AuthDAO;
+import dataAccess.AuthSQL;
 import dataAccess.DataAccessException;
-import dataAccess.UserDAO;
+import dataAccess.UserSQL;
 import model.AuthToken;
 import model.User;
 import requests.LoginRequest;
@@ -12,7 +12,6 @@ import responses.LoginResponse;
  * Logs in an existing user and returns a new authToken.
  */
 public class LoginService {
-
     /**
      * Service that responds to an HTTP request to log in a user.
      * Calls find user to check if the user is in the system.
@@ -24,10 +23,10 @@ public class LoginService {
     public LoginResponse login(LoginRequest r) {
         LoginResponse rr = new LoginResponse();
         try {
-            User u = UserDAO.getUserByUsername(r.getUsername(), r.getPassword());
+            User u = UserSQL.getUserByUsername(r.getUsername(), r.getPassword());
             if (u != null) {
                 AuthToken a = new AuthToken(u.getUserID());
-                AuthDAO.createAuth(a);
+                AuthSQL.createAuth(a);
 
                 rr.setMessage("Success!");
                 rr.setAuthToken(a.getAuthToken());
@@ -39,7 +38,7 @@ public class LoginService {
                 return rr;
             }
         } catch (DataAccessException e) {
-            rr.setMessage("Error: This data cannot be accessed");
+            rr.setMessage("Error: unauthorized");
             return rr;
         }
     }

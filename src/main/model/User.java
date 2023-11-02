@@ -4,10 +4,25 @@ package model;
  * Object used for passing and collecting user information
  */
 public class User {
+    /**
+     * The string which will contain the user-created username
+     */
     private String username;
+    /**
+     * The string which will contain the user-created password
+     */
     private String password;
+    /**
+     * The string which will contain the user-created email
+     */
     private String email;
+    /**
+     * The int which will be the user-specific ID
+     */
     private int userID;
+    /**
+     * The counter used to generate userIDs by incrementation
+     */
     static private int count = 0;
 
     /**
@@ -19,6 +34,13 @@ public class User {
         email = "";
     }
 
+    /**
+     * Constructor to create a user
+     *
+     * @param username  the username of the player
+     * @param password  the password of the player
+     * @param email the email address of the player
+     */
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;

@@ -11,10 +11,16 @@ import java.util.Objects;
  * Stores and retrieves game objects
  */
 public interface GameDAO {
+    /**
+     * Database which stores all the games
+     */
     ArrayList<Game> gameDB = GameDAOMemory.getGameDatabase();
     /**
-     * Creates a game in the database given the game object
+     * Creates a game in the database given the game object.
+     *
      * @param g the game object to be stored in the database
+     * @param auth  the authentication string correlating to an authentication token object
+     * @return true if the auth was found and the game was added, otherwise returns false
      * @throws DataAccessException  exception thrown if the database cannot be accessed properly
      */
     static boolean createGame(Game g, String auth) throws DataAccessException {
@@ -25,6 +31,12 @@ public interface GameDAO {
         return false;
     }
 
+    /**
+     * Attempts to find the game within the database.
+     *
+     * @param gameID    the int game-specific ID to be located
+     * @return  true if the game was found, otherwise returns false
+     */
     static boolean isFound(int gameID) {
         for (Game game : gameDB) {
             if (game.getGameID() == gameID) {
@@ -33,14 +45,6 @@ public interface GameDAO {
         }
         return false;
     }
-
-    /**
-     * Returns a game object that correlates to the parameter game ID.
-     * @param gameID    the string ID correlating to the game object
-     * @return  the game object having the same game ID as the input parameter
-     * @throws DataAccessException  exception thrown if the database cannot be accessed properly
-     */
-    Game getGame(String gameID) throws DataAccessException;
 
     /**
      * Claims the spot for a player into a new game.
@@ -76,18 +80,7 @@ public interface GameDAO {
         }
         return false;
     }
-    /**
-     * Updates the game by replacing the game's ID with the new ID found in the game object.
-     * @param g the game object with the new game ID
-     * @throws DataAccessException  exception thrown if the database cannot be accessed properly
-     */
-    void updateGame(Game g) throws DataAccessException;
-    /**
-     * Deletes the game from the database.
-     * @param g the game object to be deleted
-     * @throws DataAccessException  exception thrown if the database cannot be accessed properly
-     */
-    void deleteGame(Game g) throws DataAccessException;
+
     /**
      * Clears all the information within the database by deleting all games.
      */
@@ -95,6 +88,13 @@ public interface GameDAO {
         gameDB.clear();
     };
 
+    /**
+     * Lists all games in database.
+     *
+     * @param auth  the string authentication to be verified before returning games
+     * @return  game database in the form of an array
+     * @throws DataAccessException  if database cannot be located
+     */
     static ArrayList<Game> listGames(String auth) throws DataAccessException {
         if (AuthDAO.isFound(auth)) {
             return gameDB;

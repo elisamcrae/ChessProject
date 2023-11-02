@@ -4,8 +4,17 @@ package requests;
  * HTTP request information to join a chess game
  */
 public class JoinGameRequest {
+    /**
+     * The int which will contain the game-unique ID created by incrementing a counter
+     */
     private int gameID;
+    /**
+     * The string which will contain the color that the player wants to be in the game. A blank field will result in the user being an observer
+     */
     private String playerColor;
+    /**
+     * The string which will contain the user-unique authentication token
+     */
     private String authToken;
 
     public String getPlayerColor() {
@@ -18,19 +27,9 @@ public class JoinGameRequest {
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
-
-    /**
-     * Returns the game ID for the current chess game.
-     * @return gameID
-     */
     public int getGameID() {
         return gameID;
     }
-
-    /**
-     * Sets the current game ID to the string parameter.
-     * @param gameID    the string to which the current chess game's ID should be set
-     */
     public void setGameID(int gameID) {
         this.gameID = gameID;
     }
@@ -42,6 +41,13 @@ public class JoinGameRequest {
     public JoinGameRequest(int gameID) {
         this.gameID = gameID;
     }
+
+    /**
+     * Constructor to create a join game request.
+     *
+     * @param gameID    the string to which the game ID should be set
+     * @param playerColor   the color that the player wishes to be in the game
+     */
     public JoinGameRequest(int gameID, String playerColor) {
         this.playerColor = playerColor;
         this.gameID = gameID;

@@ -4,9 +4,21 @@ package requests;
  * HTTP request information to create a new chess game
  */
 public class CreateGameRequest {
+    /**
+     * The string which will contain the user-created name of the game
+     */
     private String gameName;
+    /**
+     * The string which will contain the username of the white player
+     */
     private String whiteUsername;
+    /**
+     * The string which will contain the username of the black player
+     */
     private String blackUsername;
+    /**
+     * The string which will contain the user-unique authentication token
+     */
     private String authToken;
 
     public String getAuthToken() {
@@ -16,42 +28,22 @@ public class CreateGameRequest {
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
-
-    /**
-     * Returns the name of the current game.
-     * @return gameName
-     */
     public String getGameName() {
         return gameName;
     }
-
-    /**
-     * Sets the name of the current game to the string parameter.
-     * @param gameName  the string to which the current game name should be set
-     */
     public void setGameName(String gameName) {
         this.gameName = gameName;
     }
-
-    /**
-     * Returns the username for the white player.
-     * @return white player username
-     */
     public String getWhiteUsername() {
         return whiteUsername;
     }
-
-
-    /**
-     * Returns the username for the black player.
-     * @return  black player username
-     */
     public String getBlackUsername() {
         return blackUsername;
     }
 
     /**
      * HTTP request to create new chess game.
+     *
      * @param gameName  the name to which the new chess game should be set
      * @param whiteUsername the username for the white player
      * @param blackUsername the username for the black player

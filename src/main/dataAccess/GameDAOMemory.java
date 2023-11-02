@@ -1,15 +1,16 @@
 package dataAccess;
 
-import chess.ChessGameE;
 import model.Game;
-import model.User;
 
 import java.util.ArrayList;
 
 /**
  * Implementation of GameDAO when data is stored in memory
  */
-public class GameDAOMemory implements GameDAO{
+public class GameDAOMemory implements GameDAO {
+    /**
+     * Database holding all games
+     */
     private static ArrayList<Game> gameDatabase = new ArrayList<>();
 
     public static ArrayList<Game> getGameDatabase() {
@@ -18,24 +19,5 @@ public class GameDAOMemory implements GameDAO{
 
     public static void setGameDatabase(ArrayList<Game> gameDatabase) {
         GameDAOMemory.gameDatabase = gameDatabase;
-    }
-
-    @Override
-    public Game getGame(String gameID) throws DataAccessException {
-        return null;
-    }
-
-    @Override
-    public void updateGame(Game g) throws DataAccessException {
-        for (int i = 0; i < gameDatabase.size(); ++i) {
-            if (gameDatabase.get(i).getGameID() == g.getGameID()) {
-                gameDatabase.set(i, g);
-            }
-        }
-    }
-
-    @Override
-    public void deleteGame(Game g) throws DataAccessException {
-        gameDatabase.remove(g);
     }
 }

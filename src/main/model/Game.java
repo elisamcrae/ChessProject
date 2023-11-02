@@ -8,18 +8,44 @@ import java.util.ArrayList;
  * Object used for passing and collecting chess game information
  */
 public class Game {
+    /**
+     * The int which will contain the game-specific ID
+     */
     private int gameID;
+    /**
+     * The string which will contain the username for the white player
+     */
     private String whiteUsername;
+    /**
+     * The string which will contain the username for the black player
+     */
     private String blackUsername;
+    /**
+     * The string which will contain the user-created name of the game
+     */
     private String gameName;
+    /**
+     * The chess game as a chess object
+     */
     private ChessGameE game;
+    /**
+     * The counter used to create the game ID
+     */
     static int counter = 1;
+    /**
+     * The array of observers in the game
+     */
     private ArrayList<String> observers = new ArrayList<>();
 
     public void setGameID(int gameID) {
         this.gameID = gameID;
     }
 
+    /**
+     * Adds a player to be an observer to the chess game.
+     *
+     * @param observer  the username of the player to be an observer
+     */
     public void addObserver(String observer) {
         this.observers.add(observer);
     }
@@ -37,6 +63,7 @@ public class Game {
 
     /**
      * Constructor to create a new game object.
+     *
      * @param whiteUsername string username for white player
      * @param blackUsername string username for black player
      * @param gameName  name of the game - does not have to be unique

@@ -6,7 +6,13 @@ import java.util.UUID;
  * Object used for passing and collecting authentication token information
  */
 public class AuthToken {
+    /**
+     * The string which will contain the user-unique authentication token
+     */
     private String authToken;
+    /**
+     * The int which will contain the user-unique ID
+     */
     private int userID;
 
     /**
@@ -30,6 +36,12 @@ public class AuthToken {
         return userID;
     }
 
+    /**
+     * Constructor to create an authentication token object.
+     * This will create the authentication token by generating a random string.
+     *
+     * @param userID    the int to contain a user-specific ID
+     */
     public AuthToken(int userID) {
         this.userID = userID;
         this.authToken = UUID.randomUUID().toString();

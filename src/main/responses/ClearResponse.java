@@ -1,15 +1,15 @@
 package responses;
 
+/**
+ * HTTP response information when attempting to clear all data
+ */
 public class ClearResponse {
-    private String message;
-    public String getMessage() {
-        return message;
-    }
-
     /**
-     * Sets the message to a new string.
-     * @param message   the string to which the current message should be set
+     * The string which will contain the response message, corresponding to the response status code
      */
+    private String message;
+    public String getMessage() { return message; }
+
     public void setMessage(String message) {
         this.message = message;
     }
