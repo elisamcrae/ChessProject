@@ -73,6 +73,8 @@ public class Game {
         this.blackUsername = blackUsername;
         this.gameName = gameName;
         this.game = new ChessGameE();
+        this.gameID = counter;
+        ++counter;
     }
 
     public int getGameID() {

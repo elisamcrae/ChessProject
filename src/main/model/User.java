@@ -48,6 +48,14 @@ public class User {
         this.userID = ++count;
     }
 
+    public User(String username, String password, String email, int userID) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.userID = userID;
+        ++count;
+    }
+
     public int getUserID() {
         return userID;
     }

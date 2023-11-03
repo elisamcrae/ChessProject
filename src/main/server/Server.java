@@ -43,9 +43,10 @@ public class Server {
             //CREATE AUTH
             var createAuthTable = """
             CREATE TABLE IF NOT EXISTS auth (
+                iD INT NOT NULL AUTO_INCREMENT,
                 userID INT NOT NULL,
                 token VARCHAR(255) NOT NULL,
-                PRIMARY KEY (userID)
+                PRIMARY KEY (iD)
             )""";
 
             try (var createTableStatement = conn.prepareStatement(createAuthTable)) {

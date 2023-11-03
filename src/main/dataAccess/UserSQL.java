@@ -25,53 +25,40 @@ public class UserSQL implements UserDAO{
         }
     };
 
-    static User getUser(AuthToken a) throws DataAccessException {
-//        for(int i = 0; i < userDB.size(); ++i) {
-//            if (userDB.get(i).getUserID() == a.getUserID()) {
-//                return userDB.get(i);
+//    public static User getUser(AuthToken a) throws DataAccessException {
+//        var conn = db.getConnection();
+//        int userID = a.getUserID();
+//        try (var preparedStatement = conn.prepareStatement("SELECT username, password, email FROM user WHERE userID=?")) {
+//            preparedStatement.setInt(1, userID);
+//            try (var rs = preparedStatement.executeQuery()) {
+//                var username = rs.getString("username");
+//                var password = rs.getString("password");
+//                var email = rs.getString("email");
+//
+//                User newU = new User(username, password, email);
+//                db.returnConnection(conn);
+//                return newU;
 //            }
+//        } catch (SQLException e) {
+//            db.returnConnection(conn);
+//            return null;
 //        }
-//        return null;
-        var conn = db.getConnection();
-        int userID = a.getUserID();
-        try (var preparedStatement = conn.prepareStatement("SELECT username, password, email FROM user WHERE userID=?")) {
-            preparedStatement.setInt(1, userID);
-            try (var rs = preparedStatement.executeQuery()) {
-                var username = rs.getString("username");
-                var password = rs.getString("password");
-                var email = rs.getString("email");
-
-                User newU = new User(username, password, email);
-                db.returnConnection(conn);
-                return newU;
-            }
-        } catch (SQLException e) {
-            db.returnConnection(conn);
-            return null;
-        }
-    }
+//    }
 
     public static User getUserByUsername(String username, String password) throws DataAccessException {
-//        for(int i = 0; i < userDB.size(); ++i) {
-//            if (Objects.equals(userDB.get(i).getUsername(), username) && Objects.equals(userDB.get(i).getPassword(), password)) {
-//                return userDB.get(i);
-//            }
-//        }
-//        return null;
         var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement("SELECT userID, email, password FROM user WHERE username=?")) {
             preparedStatement.setString(1, username);
             try (var rs = preparedStatement.executeQuery()) {
                 rs.next();
-                //var userID = rs.getInt("userID");
                 var email = rs.getString("email");
                 var p = rs.getString("password");
+                var userID = rs.getInt("userID");
                 if (!Objects.equals(p, password)) {
                     db.returnConnection(conn);
                     return null;
                 }
-
-                User newU = new User(username, password, email);
+                User newU = new User(username, password, email, userID);
                 db.returnConnection(conn);
                 return newU;
             }
@@ -81,18 +68,15 @@ public class UserSQL implements UserDAO{
         }
     }
 
-    static void deleteUser(User u) throws DataAccessException, SQLException {
-        var conn = db.getConnection();
-        try (var preparedStatement = conn.prepareStatement("DELETE FROM user WHERE username=?")) {
-            preparedStatement.setString(1, u.getUsername());
-            preparedStatement.executeUpdate();
-        }
-        db.returnConnection(conn);
-    }
+//    static void deleteUser(User u) throws DataAccessException, SQLException {
+//        var conn = db.getConnection();
+//        try (var preparedStatement = conn.prepareStatement("DELETE FROM user WHERE username=?")) {
+//            preparedStatement.setString(1, u.getUsername());
+//            preparedStatement.executeUpdate();
+//        }
+//        db.returnConnection(conn);
+//    }
 
-    /**
-     * Clears all the information within the database by deleting all users.
-     */
     public static void clear() throws DataAccessException {
         var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement("TRUNCATE user")) {
@@ -105,12 +89,6 @@ public class UserSQL implements UserDAO{
     };
 
     public static boolean contains(User u) throws DataAccessException {
-//        for (User user : userDB) {
-//            if (Objects.equals(user.getUsername(), u.getUsername()) && Objects.equals(user.getPassword(), u.getPassword()) && Objects.equals(user.getEmail(), u.getEmail())) {
-//                return true;
-//            }
-//        }
-//        return userDB.contains(u);
         Boolean toReturn = true;
         var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement("SELECT password, email FROM user WHERE username=?")) {
@@ -129,13 +107,7 @@ public class UserSQL implements UserDAO{
         return toReturn;
     }
 
-    static String getUsername(int userID) throws DataAccessException {
-//        for (User user : userDB) {
-//            if (user.getUserID() == userID) {
-//                return user.getUsername();
-//            }
-//        }
-//        return null;
+    public static String getUsername(int userID) throws DataAccessException {
         String toReturn = "";
         var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement("SELECT username FROM user WHERE userID=?")) {

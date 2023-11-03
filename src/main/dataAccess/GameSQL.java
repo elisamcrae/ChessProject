@@ -32,23 +32,12 @@ public class GameSQL implements GameDAO{
             }
             return toReturn;
         }
-//        if (AuthDAO.isFound(auth)) {
-//            gameDB.add(g);
-//            return true;
-//        }
-//        return false;
         else {
             return false;
         }
     }
 
     public static boolean isFound(int gameID) throws DataAccessException {
-//        for (Game game : gameDB) {
-//            if (game.getGameID() == gameID) {
-//                return true;
-//            }
-//        }
-//        return false;
         var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement("SELECT gameName FROM game WHERE gameID=?")) {
             preparedStatement.setInt(1, gameID);
@@ -66,29 +55,6 @@ public class GameSQL implements GameDAO{
     }
 
     public static boolean claimSpot(int gameID, String playerColor, String auth) throws DataAccessException {
-//        int userID = AuthDAO.getUserID(auth);
-//        String username = UserDAO.getUsername(userID);
-//        if (userID == -10000 | username == null) {
-//            return false;
-//        }
-//        for (Game game : gameDB) {
-//            if (game.getGameID() == gameID) {
-//                if (Objects.equals(playerColor, "WHITE") && game.getWhiteUsername() == null) {
-//                    game.setWhiteUsername(username);
-//                    return true;
-//                } else if (Objects.equals(playerColor, "BLACK") && game.getBlackUsername() == null) {
-//                    game.setBlackUsername(username);
-//                    return true;
-//                } else if (Objects.equals(playerColor, "") | playerColor == null) {
-//                    game.addObserver(username);
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            }
-//        }
-//        return false;
-
         int userID = AuthSQL.getUserID(auth);
         String username = UserSQL.getUsername(userID);
         if (userID == -10000 | username == null) {
@@ -145,9 +111,6 @@ public class GameSQL implements GameDAO{
         return toReturn;
     }
 
-    /**
-     * Clears all the information within the database by deleting all games.
-     */
     public static void clear() throws DataAccessException {
         var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement("TRUNCATE game")) {
@@ -159,18 +122,7 @@ public class GameSQL implements GameDAO{
         }
     };
 
-    /**
-     * Lists all games in database.
-     *
-     * @param auth  the string authentication to be verified before returning games
-     * @return  game database in the form of an array
-     * @throws DataAccessException  if database cannot be located
-     */
     public static ArrayList<Game> listGames(String auth) throws DataAccessException {
-//        if (AuthDAO.isFound(auth)) {
-//            return gameDB;
-//        }
-//        return null;
         if (!AuthSQL.isFound(auth)) {
             return null;
         }

@@ -1,4 +1,4 @@
-package passoffTests;
+package passoffTests2;
 
 import chess.ChessBoard;
 import chess.ChessGame;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import passoffTests.TestFactory;
 
 public class ChessBoardTests {
 
