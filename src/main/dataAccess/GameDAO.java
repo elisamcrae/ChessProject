@@ -1,8 +1,6 @@
 package dataAccess;
 
-import chess.ChessGameE;
 import model.Game;
-import model.User;
 
 import java.util.ArrayList;
 import java.util.Objects;

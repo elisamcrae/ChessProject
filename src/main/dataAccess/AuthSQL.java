@@ -3,7 +3,6 @@ package dataAccess;
 import model.AuthToken;
 
 import java.sql.SQLException;
-import java.util.Objects;
 
 public class AuthSQL implements AuthDAO{
     private static Database db = new Database();

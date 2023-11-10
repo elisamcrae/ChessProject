@@ -1,14 +1,10 @@
 package passoffTests2.serverTests;
 
-import dataAccess.AuthSQL;
 import dataAccess.DataAccessException;
 import dataAccess.UserSQL;
-import model.AuthToken;
 import model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserSQLTest {
 

@@ -1,10 +1,5 @@
 package chess;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static chess.ChessPiece.PieceType.ROOK;
-
 public class ChessBoardE implements ChessBoard {
     private ChessPiece[][] board = new ChessPiece[8][8];
 
