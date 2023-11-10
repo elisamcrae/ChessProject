@@ -1,10 +1,10 @@
 import java.util.Scanner;
 
 public class Repl {
-    private ClientServerFacade myClientFacade;
+    private ClientMain myClient;
 
     public Repl(String serverURL) {
-        myClientFacade = new ClientServerFacade();
+        myClient = new ClientMain();
     }
 
     public void run() {
@@ -15,8 +15,7 @@ public class Repl {
         String result = "";
         while (result != "quit") {
             String next = scanner.next();
-
-            //FIXME
+            System.out.println(myClient.eval(next));
         }
     }
 }

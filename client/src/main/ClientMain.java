@@ -2,12 +2,13 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class ClientMain {
+    private Boolean loggedIn = false;
+
     public static void main(String[] args) {
         var serverURL = "http://localhost:8080";
         if (args.length == 1) {
             serverURL = args[0];
         }
-
         new Repl(serverURL).run();
     }
 
@@ -17,35 +18,34 @@ public class ClientMain {
             return help();
         }
         else if (Objects.equals(userInputs[0], "quit")) {
-
+            return quit();
         }
         else if (Objects.equals(userInputs[0], "login")) {
-
+            return login(userInputs[1], userInputs[2]);
         }
         else if (Objects.equals(userInputs[0], "register")) {
-
+            return register();
         }
         else if (Objects.equals(userInputs[0], "logout")) {
-
+            return logout();
         }
         else if (Objects.equals(userInputs[0], "create")) {
-
+            return create();
         }
         else if (Objects.equals(userInputs[0], "join")) {
-
+            return join();
         }
         else if (Objects.equals(userInputs[0], "list")) {
-
+            return list();
         }
         else if (Objects.equals(userInputs[0], "observe")) {
-
+            return observe();
         }
-        return null; //DELETE
+        return null;
     }
 
     public String help() {
-        //IF LOGGED OUT:
-        if (true) {
+        if (!loggedIn) {
             return """
                 register <USERNAME> <PASSWORD> <EMAIL> - to create an account
                 login <USERNAME> <PASSWORD> - to play chess
@@ -69,7 +69,8 @@ public class ClientMain {
         return null;
     }
 
-    public String login() {
+    public String login(String username, String password) {
+        loggedIn = true;
         return null;
     }
 
@@ -78,20 +79,36 @@ public class ClientMain {
     }
 
     public String logout() {
+        if (!loggedIn) {
+            return "ERROR";
+        }
+        loggedIn = false;
         return null;
     }
 
     public String create() {
+        if (!loggedIn) {
+            return "ERROR";
+        }
         return null;
     }
 
     public String join() {
+        if (!loggedIn) {
+            return "ERROR";
+        }
         return null;
     }
     public String list() {
+        if (!loggedIn) {
+            return "ERROR";
+        }
         return null;
     }
     public String observe() {
+        if (!loggedIn) {
+            return "ERROR";
+        }
         return null;
     }
 }
