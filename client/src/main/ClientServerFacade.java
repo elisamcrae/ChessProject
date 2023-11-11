@@ -1,4 +1,7 @@
-import com.google.gson.*;
+import com.google.gson.Gson;
+import responses.CreateGameResponse;
+import responses.LoginResponse;
+import responses.LogoutResponse;
 import responses.RegisterResponse;
 
 import java.io.IOException;
@@ -9,16 +12,23 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class ClientServerFacade {
     private static String myURL = "http://localhost:8080";
+    private static String authToken = "";
+    private static Boolean toUseAuthToken = false;
     public static <T> T main(ArrayList<String> args, Class<T> responseType) throws Exception {
         if (args.size() >= 2) {
             var method = args.get(0);
             var url = args.get(1);
             var body = args.size() == 3 ? args.get(2) : "";
-
+            if (responseType == LogoutResponse.class | responseType == CreateGameResponse.class) {
+                toUseAuthToken = true;
+            }
+            else {
+                toUseAuthToken = false;
+                authToken = "";
+            }
             HttpURLConnection http = sendRequest(url, method, body);
             return receiveResponse(http, responseType);
         } else {
@@ -30,6 +40,9 @@ public class ClientServerFacade {
         URL url = (new URI(myURL + path)).toURL();
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
         http.setRequestMethod(method);
+        if (toUseAuthToken) {
+            http.setRequestProperty("Authorization", authToken);
+        }
         writeRequestBody(body, http);
         http.connect();
         //System.out.printf("= Request =========\n[%s] %s\n\n%s\n\n", method, url, body);
@@ -57,10 +70,10 @@ public class ClientServerFacade {
         InputStreamReader inputStreamReader;
         try (InputStream respBody = http.getInputStream()) {
             inputStreamReader = new InputStreamReader(respBody);
-            //responseBody = new Gson().fromJson(inputStreamReader, responseType);
+            responseBody = new Gson().fromJson(inputStreamReader, responseType);
         }
-        //return responseBody;
-        return (T) inputStreamReader;
+        return responseBody;
+        //return (T) inputStreamReader;
 //        Object responseBody = "";
 //        try (InputStream respBody = http.getInputStream()) {
 //            InputStreamReader inputStreamReader = new InputStreamReader(respBody);
@@ -69,11 +82,36 @@ public class ClientServerFacade {
 //        return (T)responseBody;
     }
 
-    public void register(ArrayList<String> params) throws Exception {
+    public RegisterResponse register(ArrayList<String> params) throws Exception {
         ArrayList<String> p = new ArrayList<>();
         p.add("POST");
         p.add("/user");
         p.add("{\"username\": \"" + params.get(0) + "\", \"password\": \"" + params.get(1) + "\", \"email\": \"" + params.get(2) + "\"}");
-        main(p, RegisterResponse.class);
+        return main(p, RegisterResponse.class);
+    }
+
+    public LoginResponse login(ArrayList<String> params) throws Exception {
+        ArrayList<String> p = new ArrayList<>();
+        p.add("POST");
+        p.add("/session");
+        p.add("{\"username\": \"" + params.get(0) + "\", \"password\": \"" + params.get(1) + "\"}");
+        return main(p, LoginResponse.class);
+    }
+
+    public void logout(String auth) throws Exception {
+        ArrayList<String> p = new ArrayList<>();
+        p.add("DELETE");
+        p.add("/session");
+        authToken = auth;
+        main(p, LogoutResponse.class);
+    }
+
+    public CreateGameResponse create(String name, String auth) throws Exception {
+        ArrayList<String> p = new ArrayList<>();
+        p.add("POST");
+        p.add("/game");
+        p.add("{\"gameName\": \"" + name + "\"}");
+        authToken = auth;
+        return main(p, CreateGameResponse.class);
     }
 }

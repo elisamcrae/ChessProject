@@ -50,4 +50,5 @@ public class RegisterResponse {
     public void setAuth(String auth) {
         this.authToken = auth;
     }
+    public String getAuth() {return authToken;}
 }

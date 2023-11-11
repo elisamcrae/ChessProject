@@ -1,8 +1,13 @@
+import responses.CreateGameResponse;
+import responses.LoginResponse;
+import responses.RegisterResponse;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class ClientMain {
     private Boolean loggedIn = false;
+    private String loggedInAuth = "";
     private final ClientServerFacade server = new ClientServerFacade();
 
     public static void main(String[] args) {
@@ -31,7 +36,7 @@ public class ClientMain {
             return logout();
         }
         else if (Objects.equals(userInputs[0], "create")) {
-            return create();
+            return create(userInputs[1]);
         }
         else if (Objects.equals(userInputs[0], "join")) {
             return join();
@@ -71,8 +76,17 @@ public class ClientMain {
     }
 
     public String login(String username, String password) {
-        loggedIn = true;
-        return null;
+        ArrayList<String> params = new ArrayList<>();
+        params.add(username);
+        params.add(password);
+        try {
+            LoginResponse response = server.login(params);
+            loggedIn = true;
+            loggedInAuth = response.getAuthToken();
+            return help();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String register(String username, String password, String email) {
@@ -81,8 +95,9 @@ public class ClientMain {
         params.add(password);
         params.add(email);
         try {
-            server.register(params);
+            RegisterResponse response = server.register(params);
             loggedIn = true;
+            loggedInAuth = response.getAuth();
             return(help());
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -93,15 +108,25 @@ public class ClientMain {
         if (!loggedIn) {
             return "ERROR";
         }
-        loggedIn = false;
-        return null;
+        try {
+            server.logout(loggedInAuth);
+            loggedIn = false;
+            return help();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public String create() {
+    public String create(String name) {
         if (!loggedIn) {
             return "ERROR";
         }
-        return null;
+        try {
+            CreateGameResponse response = server.create(name, loggedInAuth);
+            return "Game created!";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String join() {
