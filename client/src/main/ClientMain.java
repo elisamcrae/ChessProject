@@ -3,6 +3,7 @@ import java.util.Objects;
 
 public class ClientMain {
     private Boolean loggedIn = false;
+    private final ClientServerFacade server = new ClientServerFacade();
 
     public static void main(String[] args) {
         var serverURL = "http://localhost:8080";
@@ -24,7 +25,7 @@ public class ClientMain {
             return login(userInputs[1], userInputs[2]);
         }
         else if (Objects.equals(userInputs[0], "register")) {
-            return register();
+            return register(userInputs[1], userInputs[2], userInputs[3]);
         }
         else if (Objects.equals(userInputs[0], "logout")) {
             return logout();
@@ -39,7 +40,7 @@ public class ClientMain {
             return list();
         }
         else if (Objects.equals(userInputs[0], "observe")) {
-            return observe();
+            return observe(userInputs[1]);
         }
         return null;
     }
@@ -74,8 +75,18 @@ public class ClientMain {
         return null;
     }
 
-    public String register() {
-        return null;
+    public String register(String username, String password, String email) {
+        ArrayList<String> params = new ArrayList<>();
+        params.add(username);
+        params.add(password);
+        params.add(email);
+        try {
+            server.register(params);
+            loggedIn = true;
+            return(help());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String logout() {
@@ -105,7 +116,8 @@ public class ClientMain {
         }
         return null;
     }
-    public String observe() {
+    public String observe(String gameID) {
+        int gID = Integer.parseInt(gameID);
         if (!loggedIn) {
             return "ERROR";
         }

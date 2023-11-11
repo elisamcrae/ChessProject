@@ -14,7 +14,7 @@ public class Repl {
         Scanner scanner = new Scanner(System.in);
         String result = "";
         while (result != "quit") {
-            String next = scanner.next();
+            String next = scanner.nextLine();
             System.out.println(myClient.eval(next));
         }
     }

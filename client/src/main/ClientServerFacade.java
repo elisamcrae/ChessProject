@@ -1,5 +1,4 @@
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import responses.RegisterResponse;
 
 import java.io.IOException;
@@ -8,25 +7,28 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class ClientServerFacade {
-    public static void main(String[] args) throws Exception {
-        if (args.length >= 2) {
-            var method = args[0];
-            var url = args[1];
-            var body = args.length == 3 ? args[2] : "";
+    private static String myURL = "http://localhost:8080";
+    public static <T> T main(ArrayList<String> args, Class<T> responseType) throws Exception {
+        if (args.size() >= 2) {
+            var method = args.get(0);
+            var url = args.get(1);
+            var body = args.size() == 3 ? args.get(2) : "";
 
             HttpURLConnection http = sendRequest(url, method, body);
-            receiveResponse(http);
+            return receiveResponse(http, responseType);
         } else {
-            System.out.println("Error: <method> <url> [<body>]");
+            return null;
         }
     }
 
-    private static HttpURLConnection sendRequest(String url, String method, String body) throws URISyntaxException, IOException {
-        URI uri = new URI(url);
-        HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+    private static HttpURLConnection sendRequest(String path, String method, String body) throws URISyntaxException, IOException {
+        URL url = (new URI(myURL + path)).toURL();
+        HttpURLConnection http = (HttpURLConnection) url.openConnection();
         http.setRequestMethod(method);
         writeRequestBody(body, http);
         http.connect();
@@ -43,20 +45,35 @@ public class ClientServerFacade {
         }
     }
 
-    private static void receiveResponse(HttpURLConnection http) throws IOException {
+    private static <T> T receiveResponse(HttpURLConnection http, Class<T> responseType) throws IOException {
         var statusCode = http.getResponseCode();
         var statusMessage = http.getResponseMessage();
 
-        Object responseBody = readResponseBody(http);
-        //System.out.printf("= Response =========\n[%d] %s\n\n%s\n\n", statusCode, statusMessage, responseBody);
+        return readResponseBody(http, responseType);
     }
 
-    private static Object readResponseBody(HttpURLConnection http) throws IOException {
-        Object responseBody = "";
+    private static <T> T readResponseBody(HttpURLConnection http, Class<T> responseType) throws IOException {
+        T responseBody = null;
+        InputStreamReader inputStreamReader;
         try (InputStream respBody = http.getInputStream()) {
-            InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-            responseBody = new Gson().fromJson(inputStreamReader, Map.class);
+            inputStreamReader = new InputStreamReader(respBody);
+            //responseBody = new Gson().fromJson(inputStreamReader, responseType);
         }
-        return responseBody;
+        //return responseBody;
+        return (T) inputStreamReader;
+//        Object responseBody = "";
+//        try (InputStream respBody = http.getInputStream()) {
+//            InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+//            responseBody = new Gson().fromJson(inputStreamReader, Map.class);
+//        }
+//        return (T)responseBody;
+    }
+
+    public void register(ArrayList<String> params) throws Exception {
+        ArrayList<String> p = new ArrayList<>();
+        p.add("POST");
+        p.add("/user");
+        p.add("{\"username\": \"" + params.get(0) + "\", \"password\": \"" + params.get(1) + "\", \"email\": \"" + params.get(2) + "\"}");
+        main(p, RegisterResponse.class);
     }
 }
