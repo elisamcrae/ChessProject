@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 public class ChessGameE implements ChessGame {
     private TeamColor teamTurn = TeamColor.WHITE;
-    private ChessBoardE board;
+    private ChessBoardE board = new ChessBoardE();
 
     @Override
     public TeamColor getTeamTurn() {
@@ -44,8 +44,6 @@ public class ChessGameE implements ChessGame {
         }
         return canDo;
     }
-
-
 
     @Override
     public void makeMove(ChessMove move) throws InvalidMoveException {
@@ -111,7 +109,6 @@ public class ChessGameE implements ChessGame {
             teamTurn = TeamColor.BLACK;
         }
     }
-
     @Override
     public boolean isInCheck(TeamColor teamColor) {
         ChessPosition kingPos = board.getPosition(ChessPiece.PieceType.KING, teamColor);
@@ -124,7 +121,6 @@ public class ChessGameE implements ChessGame {
         if (endPositions.contains(kingPos)) {return true;}
         return false;
     }
-
     public Collection<ChessMove> getMoves(ChessGame.TeamColor teamColor) {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
         for (int i = 0; i < 8; ++i) {
@@ -146,7 +142,6 @@ public class ChessGameE implements ChessGame {
         return moves;
 
     }
-
     @Override
     public boolean isInCheckmate(TeamColor teamColor) {
         if (!isInCheck(teamColor)) {
@@ -165,7 +160,6 @@ public class ChessGameE implements ChessGame {
         }
         return false;
     }
-
     @Override
     public boolean isInStalemate(TeamColor teamColor) {
         if (teamColor != teamTurn) {
@@ -204,12 +198,10 @@ public class ChessGameE implements ChessGame {
         }
             return false;
     }
-
     @Override
     public void setBoard(ChessBoard board) {
         this.board = (ChessBoardE)board;
     }
-
     @Override
     public ChessBoard getBoard() {
         return board;

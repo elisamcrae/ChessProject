@@ -1,3 +1,4 @@
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Repl {
@@ -15,7 +16,12 @@ public class Repl {
         String result = "";
         while (result != "quit") {
             String next = scanner.nextLine();
-            System.out.println(myClient.eval(next));
+            if (!Objects.equals(next, "quit")) {
+                System.out.println(myClient.eval(next));
+            }
+            else{
+                return;
+            }
         }
     }
 }

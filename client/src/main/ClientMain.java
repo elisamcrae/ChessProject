@@ -1,9 +1,16 @@
-import responses.CreateGameResponse;
-import responses.LoginResponse;
-import responses.RegisterResponse;
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPositionE;
+import model.Game;
+import responses.*;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Objects;
+
+import static ui.EscapeSequences.*;
 
 public class ClientMain {
     private Boolean loggedIn = false;
@@ -39,7 +46,7 @@ public class ClientMain {
             return create(userInputs[1]);
         }
         else if (Objects.equals(userInputs[0], "join")) {
-            return join();
+            return join(userInputs[1], userInputs[2]);
         }
         else if (Objects.equals(userInputs[0], "list")) {
             return list();
@@ -129,23 +136,169 @@ public class ClientMain {
         }
     }
 
-    public String join() {
+    public String join(String gameID, String playerColor) {
         if (!loggedIn) {
             return "ERROR";
         }
-        return null;
+        try {
+            int gID = Integer.parseInt(gameID);
+            JoinGameResponse response = server.join(gID, playerColor, loggedInAuth);
+            printBoard(response.getG());
+            return "";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     public String list() {
         if (!loggedIn) {
             return "ERROR";
         }
-        return null;
+        try {
+            ListGamesResponse response = server.list(loggedInAuth);
+            ArrayList<Game> games = response.getGames();
+            StringBuilder s = new StringBuilder();
+            for (Game game : games) {
+                s.append("GameID: ").append(game.getGameID()).append(", Game Name: ").append(game.getGameName()).append(", White Player: ").append(game.getWhiteUsername()).append(", Black Player: ").append(game.getBlackUsername());
+                s.append("\n");
+            }
+            return s.toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     public String observe(String gameID) {
         int gID = Integer.parseInt(gameID);
         if (!loggedIn) {
             return "ERROR";
         }
-        return null;
+        try {
+            JoinGameResponse response = server.join(gID, loggedInAuth);
+            //printBoard(gameID);
+            return "";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static void printBoard(Game g) {
+        assert g != null;
+        ChessGame myGame = g.getGame();
+        ChessBoard board = myGame.getBoard();
+        //CREATE DICT
+        Dictionary boardDict = new Hashtable();
+        boardDict.put(ChessPiece.PieceType.ROOK, " R ");
+        boardDict.put(ChessPiece.PieceType.KNIGHT, " N ");
+        boardDict.put(ChessPiece.PieceType.BISHOP, " B ");
+        boardDict.put(ChessPiece.PieceType.QUEEN, " Q ");
+        boardDict.put(ChessPiece.PieceType.KING, " K ");
+        boardDict.put(ChessPiece.PieceType.PAWN, " P ");
+
+        int counter = -1;
+        System.out.print(RESET_BG_COLOR);
+        System.out.print(SET_TEXT_BOLD);
+        System.out.print(SET_TEXT_COLOR_WHITE);
+        System.out.println("    h  g  f  e  d  c  b  a ");
+        for (int i = 0; i < 8; ++i) {
+            System.out.print(RESET_BG_COLOR);
+            System.out.print(SET_TEXT_COLOR_WHITE);
+            System.out.print(SET_TEXT_BOLD);
+            System.out.print(" " + String.valueOf(i+1) + " ");
+            for (int j = 0; j < 8; ++j) {
+                ++counter;
+                if (counter % 2 == 0) {
+                    System.out.print("\u001b[31;100m");
+                    ChessPiece c = board.getPiece(new ChessPositionE(i + 1, j + 1));
+                    if (c != null) {
+                        if (c.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                            System.out.print(boardDict.get(c.getPieceType()));
+                        }
+                        else {
+                            System.out.print("\u001b[34;100m");
+                            System.out.print(boardDict.get(c.getPieceType()));
+                        }
+                    }
+                    else {
+                        System.out.print("   ");
+                    }
+                }
+                else {
+                    //PRINT COLOR B
+                    System.out.print("\u001b[31;107m");
+                    ChessPiece c = board.getPiece(new ChessPositionE(i + 1, j + 1));
+                    if (c != null) {
+                        if (c.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                            System.out.print(boardDict.get(c.getPieceType()));
+                        }
+                        else {
+                            System.out.print("\u001b[34;107m");
+                            System.out.print(boardDict.get(c.getPieceType()));
+                        }                    }
+                    else {
+                        System.out.print("   ");
+                    }
+                }
+            }
+            System.out.print(RESET_BG_COLOR);
+            System.out.print(SET_TEXT_COLOR_WHITE);
+            System.out.print(SET_TEXT_BOLD);
+            System.out.println(" " + String.valueOf(i+1) + " ");
+            ++counter;
+        }
+        System.out.print(SET_TEXT_BOLD);
+        System.out.println("    h  g  f  e  d  c  b  a ");
+
+        //BOARD TWO
+        counter = -1;
+        System.out.print(RESET_BG_COLOR);
+        System.out.print(SET_TEXT_BOLD);
+        System.out.print(SET_TEXT_COLOR_WHITE);
+        System.out.println("    a  b  c  d  e  f  g  h ");
+        for (int i = 8; i > 0; --i) {
+            System.out.print(RESET_BG_COLOR);
+            System.out.print(SET_TEXT_COLOR_WHITE);
+            System.out.print(SET_TEXT_BOLD);
+            System.out.print(" " + String.valueOf(i) + " ");
+            for (int j = 8; j > 0; --j) {
+                ++counter;
+                if (counter % 2 == 0) {
+                    System.out.print("\u001b[31;100m");
+                    ChessPiece c = board.getPiece(new ChessPositionE(i , j ));
+                    if (c != null) {
+                        if (c.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                            System.out.print(boardDict.get(c.getPieceType()));
+                        }
+                        else {
+                            System.out.print("\u001b[34;100m");
+                            System.out.print(boardDict.get(c.getPieceType()));
+                        }
+                    }
+                    else {
+                        System.out.print("   ");
+                    }
+                }
+                else {
+                    //PRINT COLOR B
+                    System.out.print("\u001b[31;107m");
+                    ChessPiece c = board.getPiece(new ChessPositionE(i , j ));
+                    if (c != null) {
+                        if (c.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                            System.out.print(boardDict.get(c.getPieceType()));
+                        }
+                        else {
+                            System.out.print("\u001b[34;107m");
+                            System.out.print(boardDict.get(c.getPieceType()));
+                        }                    }
+                    else {
+                        System.out.print("   ");
+                    }
+                }
+            }
+            System.out.print(RESET_BG_COLOR);
+            System.out.print(SET_TEXT_COLOR_WHITE);
+            System.out.print(SET_TEXT_BOLD);
+            System.out.println(" " + String.valueOf(i) + " ");
+            ++counter;
+        }
+        System.out.print(SET_TEXT_BOLD);
+        System.out.println("    a  b  c  d  e  f  g  h ");
     }
 }

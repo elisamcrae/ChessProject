@@ -32,6 +32,8 @@ public class JoinGameService {
                 boolean worked = GameSQL.claimSpot(r.getGameID(), r.getPlayerColor(), r.getAuthToken());
                 if (worked) {
                     response.setMessage("Success!");
+                    //GameSQL.printBoard(r.getGameID());
+                    response.setG(GameSQL.getBoard(r.getGameID()));
                 }
                 else {
                     response.setMessage("Error: already taken");
