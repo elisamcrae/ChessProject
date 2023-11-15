@@ -173,7 +173,7 @@ public class ClientMain {
         }
         try {
             JoinGameResponse response = server.join(gID, loggedInAuth);
-            //printBoard(gameID);
+            printBoard(response.getG());
             return "";
         } catch (Exception e) {
             throw new RuntimeException(e);
