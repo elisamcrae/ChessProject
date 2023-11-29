@@ -25,7 +25,7 @@ public class CreateGameService {
             boolean worked = AuthSQL.isFound(r.getAuthToken());
             if (worked) {
                 Game g = new Game(r.getWhiteUsername(), r.getBlackUsername(), r.getGameName());
-                g.setGameID();
+                //g.setGameID();
                 GameSQL.createGame(g, r.getAuthToken());
                 response.setMessage("Success!");
                 response.setGameID(g.getGameID());

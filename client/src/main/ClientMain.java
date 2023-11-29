@@ -5,6 +5,11 @@ import chess.ChessPositionE;
 import model.Game;
 import responses.*;
 
+import javax.websocket.ContainerProvider;
+import javax.websocket.MessageHandler;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -16,8 +21,9 @@ public class ClientMain {
     private Boolean loggedIn = false;
     private String loggedInAuth = "";
     private final ClientServerFacade server = new ClientServerFacade();
+    private WSClient ws;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         var serverURL = "http://localhost:8080";
         if (args.length == 1) {
             serverURL = args[0];
@@ -25,7 +31,22 @@ public class ClientMain {
         new Repl(serverURL).run();
     }
 
-    public String eval(String input) {
+    //NEW FOR WEBSOCKET
+//    public Session session;
+//
+//    public ClientMain() throws Exception {
+//        URI uri = new URI("ws://localhost:8080/connect");
+//        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+//        this.session = container.connectToServer(this, uri);
+//
+//        this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+//            public void onMessage(String message) {
+//                System.out.println(message);
+//            }
+//        });
+//    }
+
+    public String eval(String input) throws Exception {
         String[] userInputs = input.split(" ");
         if (Objects.equals(userInputs[0], "help")) {
             return help();
@@ -136,18 +157,26 @@ public class ClientMain {
         }
     }
 
-    public String join(String gameID, String playerColor) {
+    public String join(String gameID, String playerColor) throws Exception {
         if (!loggedIn) {
             return "ERROR";
         }
-        try {
-            int gID = Integer.parseInt(gameID);
-            JoinGameResponse response = server.join(gID, playerColor, loggedInAuth);
-            printBoard(response.getG());
-            return "";
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        int gID = Integer.parseInt(gameID);
+        ChessGame.TeamColor tc = ChessGame.TeamColor.WHITE;
+        if (playerColor.equalsIgnoreCase("black")) {
+            tc = ChessGame.TeamColor.BLACK;
         }
+        try {
+            JoinGameResponse response = server.join(gID, playerColor, loggedInAuth);
+
+            //printBoard(response.getG());
+        } catch (Exception e) {
+            gID = -1000;
+            //throw new RuntimeException(e);
+        }
+        ws = new WSClient();
+        ws.join(loggedInAuth, gID, tc);
+        return "";
     }
     public String list() {
         if (!loggedIn) {

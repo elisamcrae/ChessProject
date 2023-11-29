@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Repl {
     private ClientMain myClient;
 
-    public Repl(String serverURL) {
+    public Repl(String serverURL) throws Exception {
         myClient = new ClientMain();
     }
 
@@ -17,7 +17,11 @@ public class Repl {
         while (result != "quit") {
             String next = scanner.nextLine();
             if (!Objects.equals(next, "quit")) {
-                System.out.println(myClient.eval(next));
+                try {
+                    System.out.println(myClient.eval(next));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
             else{
                 return;

@@ -2,13 +2,14 @@ package server;
 import dataAccess.DataAccessException;
 import dataAccess.Database;
 import handlers.*;
+import org.eclipse.jetty.websocket.server.WebSocketHandler;
 import spark.Spark;
 
 import java.sql.SQLException;
 
 public class Server {
-    //ADDING:
     private static Database db = new Database();
+    public ServerWebSockets.WSServer webSocketHandler = new ServerWebSockets.WSServer();
 
     public static void main(String[] args) throws SQLException, DataAccessException {
         configureDatabase();
@@ -18,6 +19,7 @@ public class Server {
     private void run() {
         // Specify the port you want the server to listen on
         Spark.port(8080);
+        Spark.webSocket("/connect", ServerWebSockets.WSServer.class);
 
         // Register a directory for hosting static files
         Spark.externalStaticFileLocation("web");

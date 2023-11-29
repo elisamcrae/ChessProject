@@ -74,7 +74,7 @@ public class Game {
         this.gameName = gameName;
         this.game = new ChessGameE();
         this.gameID = counter;
-        ++counter;
+        counter++;
     }
 
     public int getGameID() {
