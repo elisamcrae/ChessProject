@@ -62,18 +62,32 @@ public class WSServer {
 //        }
         //ERRORS FROM MY CODE
 
-        if (j.getGameID() == -1000) {
+        if (j.getGameID() == -1000 | !GameSQL.isFound(j.getGameID())) {
             ErrorSMessage error = new ErrorSMessage(ServerMessage.ServerMessageType.ERROR, "The team color you requested is already taken.");
+            session.getRemote().sendString(new Gson().toJson(error));
+        }
+
+        int userID = AuthSQL.getUserID(j.authToken);
+        String username = UserSQL.getUsername(userID);
+        ArrayList<String> players = GameSQL.getPlayers(j.getGameID());
+        assert !players.isEmpty();
+        if (j.getPlayerColor() == ChessGame.TeamColor.WHITE & !Objects.equals(players.get(0), username)) {
+            ErrorSMessage error = new ErrorSMessage(ServerMessage.ServerMessageType.ERROR, "The player was not joined to the game.");
+            session.getRemote().sendString(new Gson().toJson(error));
+        }
+        else if (j.getPlayerColor() == ChessGame.TeamColor.BLACK & !Objects.equals(players.get(1), username)){
+            ErrorSMessage error = new ErrorSMessage(ServerMessage.ServerMessageType.ERROR, "The player was not joined to the game.");
             session.getRemote().sendString(new Gson().toJson(error));
         }
         else {
             //ERRORS FROM THE TEST CASES
             ArrayList<Game> gamesToCheck = GameSQL.listGames(j.authToken);
             assert gamesToCheck != null;
-            int userID = AuthSQL.getUserID(j.authToken);
-            String username = UserSQL.getUsername(userID);
+            boolean foundGameID = false;
+            boolean foundPlayer = false;
             for (Game item : gamesToCheck) {
                 if (item.getGameID() == j.getGameID()) {
+                    foundGameID = true;
                     if (j.getPlayerColor() == ChessGame.TeamColor.WHITE) {
                         if (item.getWhiteUsername() != null && !Objects.equals(item.getWhiteUsername(), username)) {
                             ErrorSMessage error = new ErrorSMessage(ServerMessage.ServerMessageType.ERROR, "The team color you requested is already taken.");
@@ -87,17 +101,23 @@ public class WSServer {
                     }
                 }
             }
-
-            String message = String.format("A player has joined the game as %s", j.getPlayerColor());
-            //session.getRemote().sendString(message);
-            NotificationSMessage notification = new NotificationSMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
-            for (Session value : sessions) {
-                if (value != session) {
-                    value.getRemote().sendString(new Gson().toJson(notification));
-                }
-                else {
-                    LoadGameSMessage game = new LoadGameSMessage(ServerMessage.ServerMessageType.LOAD_GAME, Objects.requireNonNull(GameSQL.getBoard(j.getGameID())).getGame());
-                    session.getRemote().sendString(new Gson().toJson(game));
+            boolean foundAuth = AuthSQL.isFound(j.authToken);
+            if (!foundGameID | j.getPlayerColor() == null | !foundAuth) {
+                ErrorSMessage error = new ErrorSMessage(ServerMessage.ServerMessageType.ERROR, "The team color you requested is already taken.");
+                session.getRemote().sendString(new Gson().toJson(error));
+            }
+            else {
+                String message = String.format("A player has joined the game as %s", j.getPlayerColor());
+                //session.getRemote().sendString(message);
+                NotificationSMessage notification = new NotificationSMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+                for (Session value : sessions) {
+                    if (value != session) {
+                        value.getRemote().sendString(new Gson().toJson(notification));
+                    }
+                    else {
+                        LoadGameSMessage game = new LoadGameSMessage(ServerMessage.ServerMessageType.LOAD_GAME, Objects.requireNonNull(GameSQL.getBoard(j.getGameID())).getGame());
+                        session.getRemote().sendString(new Gson().toJson(game));
+                    }
                 }
             }
         }

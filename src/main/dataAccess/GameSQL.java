@@ -207,6 +207,28 @@ public class GameSQL implements GameDAO{
             throw new RuntimeException(e);
         }
     }
+
+    public static ArrayList<String> getPlayers(int gameID) throws DataAccessException {
+        var conn = db.getConnection();
+        ArrayList<String> toReturn = new ArrayList<>();
+
+        try (var preparedStatement = conn.prepareStatement("SELECT whitePlayer, blackPlayer FROM game WHERE gameID=?")) {
+            preparedStatement.setInt(1, gameID);
+            try (var rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    String white = rs.getString("whitePlayer");
+                    String black = rs.getString("blackPlayer");
+                    toReturn.add(white);
+                    toReturn.add(black);
+                }
+            }
+        } catch (SQLException e) {
+
+        } finally {
+            db.returnConnection(conn);
+        }
+        return toReturn;
+    }
 }
 
 class ChessPieceAdapter implements JsonSerializer<ChessPiece>, JsonDeserializer<ChessPiece> {
