@@ -99,7 +99,7 @@ public class GameSQL implements GameDAO{
                                 preparedStatement2.executeUpdate();
                             }
                         }
-                        else if (playerColor == null | playerColor == "") {
+                        else if (playerColor == null | Objects.equals(playerColor, "")) {
                             try (var preparedStatement2 = conn.prepareStatement("UPDATE game SET observers=? WHERE gameID=?")) {
                                 preparedStatement2.setString(1, obs + "," + username);
                                 preparedStatement2.setInt(2, gameID);
@@ -223,7 +223,25 @@ public class GameSQL implements GameDAO{
                 }
             }
         } catch (SQLException e) {
+        } finally {
+            db.returnConnection(conn);
+        }
+        return toReturn;
+    }
 
+    public static ArrayList<String> getObservers(int gameID) throws DataAccessException {
+        var conn = db.getConnection();
+        ArrayList<String> toReturn = new ArrayList<>();
+
+        try (var preparedStatement = conn.prepareStatement("SELECT observers FROM game WHERE gameID=?")) {
+            preparedStatement.setInt(1, gameID);
+            try (var rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    String observers = rs.getString("observers");
+                    toReturn.add(observers);
+                }
+            }
+        } catch (SQLException e) {
         } finally {
             db.returnConnection(conn);
         }

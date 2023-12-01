@@ -190,6 +190,9 @@ public class ClientMain {
                 s.append("GameID: ").append(game.getGameID()).append(", Game Name: ").append(game.getGameName()).append(", White Player: ").append(game.getWhiteUsername()).append(", Black Player: ").append(game.getBlackUsername());
                 s.append("\n");
             }
+            if (games.isEmpty()) {
+                s.append("No games created.");
+            }
             return s.toString();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -197,16 +200,20 @@ public class ClientMain {
     }
     public String observe(String gameID) {
         int gID = Integer.parseInt(gameID);
-        if (!loggedIn) {
-            return "ERROR";
-        }
+        if (!loggedIn) {return "ERROR";}
         try {
             JoinGameResponse response = server.join(gID, loggedInAuth);
-            printBoard(response.getG());
-            return "";
+            //printBoard(response.getG());
+        } catch (Exception e) {
+            gID = -1000;
+        }
+        try {
+            ws = new WSClient();
+            ws.observe(loggedInAuth, gID);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        return "";
     }
     public static void printBoard(Game g) {
         assert g != null;

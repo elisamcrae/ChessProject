@@ -87,7 +87,6 @@ public class ClientServerFacade {
         p.add("{\"username\": \"" + params.get(0) + "\", \"password\": \"" + params.get(1) + "\", \"email\": \"" + params.get(2) + "\"}");
         return main(p, RegisterResponse.class);
     }
-
     public LoginResponse login(ArrayList<String> params) throws Exception {
         ArrayList<String> p = new ArrayList<>();
         p.add("POST");
@@ -95,7 +94,6 @@ public class ClientServerFacade {
         p.add("{\"username\": \"" + params.get(0) + "\", \"password\": \"" + params.get(1) + "\"}");
         return main(p, LoginResponse.class);
     }
-
     public void logout(String auth) throws Exception {
         ArrayList<String> p = new ArrayList<>();
         p.add("DELETE");
@@ -103,7 +101,6 @@ public class ClientServerFacade {
         authToken = auth;
         main(p, LogoutResponse.class);
     }
-
     public CreateGameResponse create(String name, String auth) throws Exception {
         ArrayList<String> p = new ArrayList<>();
         p.add("POST");
@@ -112,7 +109,6 @@ public class ClientServerFacade {
         authToken = auth;
         return main(p, CreateGameResponse.class);
     }
-
     public JoinGameResponse join(int gameID, String color, String auth) throws Exception {
         ArrayList<String> p = new ArrayList<>();
         p.add("PUT");

@@ -1,7 +1,4 @@
-import Communication.ErrorSMessage;
-import Communication.JoinPlayerUCommand;
-import Communication.LoadGameSMessage;
-import Communication.NotificationSMessage;
+import Communication.*;
 import chess.*;
 import com.google.gson.*;
 import model.Game;
@@ -21,19 +18,11 @@ import static ui.EscapeSequences.SET_TEXT_BOLD;
 
 public class WSClient extends Endpoint {
     public Session session;
-    private ChessGame.TeamColor color;
-//    public static void main(String[] args) throws Exception {
-//        var ws = new WSClient();
-//        Scanner scanner = new Scanner(System.in);
-//
-//        while (true) ws.send(scanner.nextLine());
-//    }
-
+    private ChessGame.TeamColor color = ChessGame.TeamColor.WHITE;
     public WSClient() throws Exception {
         URI uri = new URI("ws://localhost:8080/connect");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
-
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             @Override
             public void onMessage(String message) {
@@ -68,6 +57,11 @@ public class WSClient extends Endpoint {
     public void join(String auth, int gameID, ChessGame.TeamColor color) throws Exception {
         JoinPlayerUCommand j = new JoinPlayerUCommand(auth, gameID, color);
         this.color = color;
+        send(new Gson().toJson(j));
+    }
+
+    public void observe(String auth, int gameID) throws Exception {
+        JoinObserverUCommand j = new JoinObserverUCommand(auth, gameID);
         send(new Gson().toJson(j));
     }
 
@@ -131,7 +125,8 @@ public class WSClient extends Endpoint {
             }
             System.out.print(SET_TEXT_BOLD);
             System.out.println("    h  g  f  e  d  c  b  a ");
-
+            System.out.print(RESET_BG_COLOR);
+            System.out.print(RESET_TEXT_BOLD_FAINT);
         } else {
             int counter = -1;
 //BOARD TWO
@@ -183,6 +178,8 @@ public class WSClient extends Endpoint {
             }
             System.out.print(SET_TEXT_BOLD);
             System.out.println("    a  b  c  d  e  f  g  h ");
+            System.out.print(RESET_BG_COLOR);
+            System.out.print(RESET_TEXT_BOLD_FAINT);
         }
     }
 }
