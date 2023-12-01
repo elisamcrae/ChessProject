@@ -144,15 +144,6 @@ class ChessPieceAdapter implements JsonSerializer<ChessPiece>, JsonDeserializer<
     public ChessPiece deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         String type = jsonObject.get("pieceType").getAsString();
-//        String newString = type.toLowerCase();
-//        newString = newString.substring(0,1).toUpperCase() + newString.substring(1);
-//        newString = "chess." + newString;
-//        JsonElement data = jsonObject.get("data");
-//        try {
-//            return context.deserialize(data, Class.forName(newString));
-//        } catch (ClassNotFoundException e) {
-//            throw new JsonParseException("Unknown element type: " + newString, e);
-//        }
         ChessPieceFactory pieceFactory = new ChessPieceFactory();
         ChessPiece x = pieceFactory.createChessPiece(type, jsonObject);
         return x;

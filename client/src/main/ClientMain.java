@@ -31,21 +31,6 @@ public class ClientMain {
         new Repl(serverURL).run();
     }
 
-    //NEW FOR WEBSOCKET
-//    public Session session;
-//
-//    public ClientMain() throws Exception {
-//        URI uri = new URI("ws://localhost:8080/connect");
-//        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-//        this.session = container.connectToServer(this, uri);
-//
-//        this.session.addMessageHandler(new MessageHandler.Whole<String>() {
-//            public void onMessage(String message) {
-//                System.out.println(message);
-//            }
-//        });
-//    }
-
     public String eval(String input) throws Exception {
         String[] userInputs = input.split(" ");
         if (Objects.equals(userInputs[0], "help")) {
@@ -75,6 +60,9 @@ public class ClientMain {
         else if (Objects.equals(userInputs[0], "observe")) {
             return observe(userInputs[1]);
         }
+//        else if (Objects.equals(userInputs[0], "make move")) {
+//            return move(userInputs[1]);
+//        }
         return null;
     }
 
@@ -166,9 +154,17 @@ public class ClientMain {
         if (playerColor.equalsIgnoreCase("black")) {
             tc = ChessGame.TeamColor.BLACK;
         }
+        String toReturn = "";
         try {
             JoinGameResponse response = server.join(gID, playerColor, loggedInAuth);
-
+            toReturn = """
+                Commands:
+                redraw chess board
+                leave
+                make move
+                resign
+                highlight legal moves
+                """;
             //printBoard(response.getG());
         } catch (Exception e) {
             gID = -1000;
@@ -176,7 +172,7 @@ public class ClientMain {
         }
         ws = new WSClient();
         ws.join(loggedInAuth, gID, tc);
-        return "";
+        return toReturn;
     }
     public String list() {
         if (!loggedIn) {

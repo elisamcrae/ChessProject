@@ -12,4 +12,7 @@ public class MakeMoveUCommand extends UserGameCommand {
         this.gameID = gameID;
         move = m;
     }
+
+    public int getGameID() {return gameID;
+    }
 }
