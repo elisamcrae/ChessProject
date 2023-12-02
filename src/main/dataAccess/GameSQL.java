@@ -61,6 +61,25 @@ public class GameSQL implements GameDAO{
         }
     }
 
+    public static void updateWhitePlayer(int gameID) throws DataAccessException {
+        var conn = db.getConnection();
+        try (var preparedStatement = conn.prepareStatement("SELECT whitePlayer FROM game WHERE gameID=?")) {
+            preparedStatement.setInt(1, gameID);
+            try (var rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    var whiteP = rs.getString("whitePlayer");
+                    try (var preparedStatement2 = conn.prepareStatement("UPDATE game SET whitePlayer=? WHERE gameID=?")) {
+                        preparedStatement2.setString(1, "RESIGNED");
+                        preparedStatement2.setInt(2, gameID);
+                        preparedStatement2.executeUpdate();
+                    }
+                }
+            }
+        } catch (SQLException e) {
+        } finally {
+            db.returnConnection(conn);
+        }
+    }
     public static boolean claimSpot(int gameID, String playerColor, String auth) throws DataAccessException {
         int userID = AuthSQL.getUserID(auth);
         String username = UserSQL.getUsername(userID);
@@ -120,7 +139,6 @@ public class GameSQL implements GameDAO{
         }
         return toReturn;
     }
-
     public static void clear() throws DataAccessException {
         var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement("TRUNCATE game")) {
@@ -131,7 +149,6 @@ public class GameSQL implements GameDAO{
             db.returnConnection(conn);
         }
     };
-
     public static ArrayList<Game> listGames(String auth) throws DataAccessException {
         if (!AuthSQL.isFound(auth)) {
             return null;
