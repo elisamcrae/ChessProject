@@ -162,8 +162,6 @@ public class GameSQL implements GameDAO{
         }
         return gameslist;
     }
-
-
     public static Game getBoard(int gameID) throws DataAccessException {
         var conn = db.getConnection();
         try (var preparedStatement = conn.prepareStatement("SELECT games FROM game WHERE gameID=?")) {
@@ -207,7 +205,6 @@ public class GameSQL implements GameDAO{
             throw new RuntimeException(e);
         }
     }
-
     public static ArrayList<String> getPlayers(int gameID) throws DataAccessException {
         var conn = db.getConnection();
         ArrayList<String> toReturn = new ArrayList<>();
@@ -228,7 +225,6 @@ public class GameSQL implements GameDAO{
         }
         return toReturn;
     }
-
     public static ArrayList<String> getObservers(int gameID) throws DataAccessException {
         var conn = db.getConnection();
         ArrayList<String> toReturn = new ArrayList<>();

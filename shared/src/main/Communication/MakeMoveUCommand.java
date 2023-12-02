@@ -13,6 +13,6 @@ public class MakeMoveUCommand extends UserGameCommand {
         move = m;
     }
 
-    public int getGameID() {return gameID;
-    }
+    public int getGameID() {return gameID;}
+    public ChessMove getMove() {return move;}
 }

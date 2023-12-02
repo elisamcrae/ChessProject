@@ -6,10 +6,10 @@ public class ChessPositionE implements ChessPosition {
     private int row;
     private int col;
     public ChessPositionE(int row, int col) {
-        this.row = row-1;
-        this.col = col-1;
-        //this.row = row;
-        //this.col = col;
+        //this.row = row-1;
+        //this.col = col-1;
+        this.row = row;
+        this.col = col;
     }
     public ChessPositionE() {
         row = 0;
