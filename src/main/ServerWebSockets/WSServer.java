@@ -39,6 +39,7 @@ public class WSServer {
                 case MAKE_MOVE -> move(session, message);
                 case LEAVE -> leave(session, new Gson().fromJson(message, LeaveUCommand.class));
                 case RESIGN -> resign(session, new Gson().fromJson(message, ResignUCommand.class));
+                //case HIGHLIGHT_LEGAL_MOVES -> highlight(session, message);
             }
     }
 
@@ -163,10 +164,15 @@ public class WSServer {
         }
         ChessGame chessgame = GameSQL.getBoard(j.getGameID()).getGame();
         String usernameTryingToMakeMove = UserSQL.getUsername(AuthSQL.getUserID(j.authToken));
-        //teamTurn = chessgame.getTeamTurn();
         ChessGame.TeamColor colorTryingToMakeMove = ChessGame.TeamColor.WHITE;
         if (usernameTryingToMakeMove == GameSQL.getBoard(j.getGameID()).getBlackUsername()) {
             colorTryingToMakeMove = ChessGame.TeamColor.BLACK;
+        }
+        ArrayList<String> players = GameSQL.getPlayers(j.getGameID());
+        if (!players.contains(usernameTryingToMakeMove)) {
+            ErrorSMessage error = new ErrorSMessage(ServerMessage.ServerMessageType.ERROR, "ERROR: observers cannot make moves.");
+            session.getRemote().sendString(new Gson().toJson(error));
+            return;
         }
         Collection<ChessMove> validMoves = chessgame.validMoves(startPosition);
         if (!validMoves.contains(j.getMove()) | colorTryingToMakeMove != teamTurn) {
@@ -194,6 +200,21 @@ public class WSServer {
         }
         else {
             teamTurn = ChessGame.TeamColor.WHITE;
+        }
+        boolean isInCheckOrCheckmate = false;
+        if (chessgame.isInCheck(colorTryingToMakeMove)) {
+            message = usernameTryingToMakeMove + " has put his opponent in check.";
+            isInCheckOrCheckmate = true;
+        }
+        if (chessgame.isInCheckmate(colorTryingToMakeMove)) {
+            message = usernameTryingToMakeMove + " has put his opponent in checkmate.";
+            isInCheckOrCheckmate = true;
+        }
+        if (isInCheckOrCheckmate) {
+            for (Session value : games.get(j.getGameID())) {
+                NotificationSMessage notification = new NotificationSMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+                value.getRemote().sendString(new Gson().toJson(notification));
+            }
         }
     }
     private void leave(Session session, LeaveUCommand j) throws IOException, DataAccessException {
