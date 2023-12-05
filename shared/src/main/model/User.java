@@ -23,7 +23,7 @@ public class User {
     /**
      * The counter used to generate userIDs by incrementation
      */
-    static private int count = 0;
+    static private int count = 100;
 
     /**
      * Resets the username, password, and email strings by setting them all equal to blank strings.

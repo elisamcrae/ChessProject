@@ -50,7 +50,6 @@ public class ChessGameE implements ChessGame {
         if (teamTurn != board.getPiece(move.getStartPosition()).getTeamColor()) {
             InvalidMoveException InvalidMoveexception = new InvalidMoveException();
             throw InvalidMoveexception;
-
         }
         Collection<ChessMove> moves = validMoves(move.getStartPosition());
 
@@ -142,6 +141,52 @@ public class ChessGameE implements ChessGame {
         return moves;
 
     }
+
+    public void makeMoveCheck(ChessMove move) throws InvalidMoveException {
+//        Collection<ChessMove> moves = validMoves(move.getStartPosition());
+//
+//        //move not in valid moves
+//        if (!moves.contains(move) | moves == null) {
+//            InvalidMoveException InvalidMoveexception = new InvalidMoveException();
+//            throw InvalidMoveexception;
+//
+        /*} else */if (isInCheck(teamTurn)) {
+            ChessPosition currPos = move.getStartPosition();
+            ChessPiece currPiece = board.getPiece(currPos);
+            ChessPosition finalPos = move.getEndPosition();
+            ChessPiece finalPiece = board.getPiece(finalPos);
+            board.makeMove(move);
+//            if (isInCheck(teamTurn)) {
+//                board.addPiece(finalPos, finalPiece);
+//                board.addPiece(currPos, currPiece);
+//
+//                InvalidMoveException InvalidMoveexception = new InvalidMoveException();
+//                throw InvalidMoveexception;
+//            }
+//
+//        } else {
+            //board.makeMove(move);
+            if (move.getPromotionPiece() != null & (move.getEndPosition().getRow() == 0 | move.getEndPosition().getRow() == 7)) {
+                ChessPieceE p = new Pawn(teamTurn);
+                if (move.getPromotionPiece() == ChessPiece.PieceType.KING) {
+                    p = new King(teamTurn);
+                }
+                else if (move.getPromotionPiece() == ChessPiece.PieceType.QUEEN) {
+                    p = new Queen(teamTurn);
+                }
+                else if (move.getPromotionPiece() == ChessPiece.PieceType.ROOK) {
+                    p = new Rook(teamTurn);
+                }
+                else if (move.getPromotionPiece() == ChessPiece.PieceType.BISHOP) {
+                    p = new Bishop(teamTurn);
+                }
+                else if (move.getPromotionPiece() == ChessPiece.PieceType.KNIGHT) {
+                    p = new Knight(teamTurn);
+                }
+                board.addPiece(move.getEndPosition(), p);
+            }
+        }
+    }
     @Override
     public boolean isInCheckmate(TeamColor teamColor) {
         if (!isInCheck(teamColor)) {
@@ -149,7 +194,7 @@ public class ChessGameE implements ChessGame {
         }
         Collection<ChessPosition> endPositions = new ArrayList<ChessPosition>();
         ChessPosition kingPos = board.getPosition(ChessPiece.PieceType.KING, teamColor);
-        Collection<ChessMove> possibleMoves = validMoves(kingPos);
+        //Collection<ChessMove> possibleMoves = validMoves(kingPos);
         Collection<ChessMove> moves = getMoves(teamColor);
 
         for (Iterator<ChessMove> iterator = moves.iterator(); iterator.hasNext(); ) {

@@ -1,18 +1,12 @@
 import Communication.*;
 import chess.*;
 import com.google.gson.*;
-import model.Game;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import webSocketMessages.serverMessages.ServerMessage;
-
 import javax.websocket.*;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.Scanner;
-
 import static ui.EscapeSequences.*;
 import static ui.EscapeSequences.SET_TEXT_BOLD;
 
@@ -36,10 +30,7 @@ public class WSClient extends Endpoint {
                         LoadGameSMessage g = builder.create().fromJson(message, LoadGameSMessage.class);
                         printBoard(g.game, color);
                         break;
-                    case NOTIFICATION:
-                        System.out.println(sm.getMessage());
-                        break;
-                    case ERROR:
+                    case NOTIFICATION, ERROR:
                         System.out.println(sm.getMessage());
                         break;
                 }
@@ -65,6 +56,20 @@ public class WSClient extends Endpoint {
         send(new Gson().toJson(j));
     }
 
+    public void move(String auth, int gameID, ChessMove move) throws Exception {
+        MakeMoveUCommand u = new MakeMoveUCommand(auth, gameID, move);
+        send(new Gson().toJson(u));
+    }
+    public void resign(String auth, int gameID) throws Exception {
+        ResignUCommand r = new ResignUCommand(auth, gameID);
+        send(new Gson().toJson(r));
+    }
+
+    public void leave(String auth, int gameID) throws Exception {
+        LeaveUCommand l = new LeaveUCommand(auth, gameID);
+        send(new Gson().toJson(l));
+    }
+
     public static void printBoard(ChessGame myGame, ChessGame.TeamColor color) {
         ChessBoard board = myGame.getBoard();
         //CREATE DICT
@@ -81,12 +86,12 @@ public class WSClient extends Endpoint {
             System.out.print(SET_TEXT_BOLD);
             System.out.print(SET_TEXT_COLOR_WHITE);
             System.out.println("    h  g  f  e  d  c  b  a ");
-            for (int i = 0; i < 8; ++i) {
+            for (int i = -1; i < 7; ++i) {
                 System.out.print(RESET_BG_COLOR);
                 System.out.print(SET_TEXT_COLOR_WHITE);
                 System.out.print(SET_TEXT_BOLD);
                 System.out.print(" " + String.valueOf(i + 1) + " ");
-                for (int j = 0; j < 8; ++j) {
+                for (int j = -1; j < 7; ++j) {
                     ++counter;
                     if (counter % 2 == 0) {
                         System.out.print("\u001b[31;100m");
@@ -134,12 +139,12 @@ public class WSClient extends Endpoint {
             System.out.print(SET_TEXT_BOLD);
             System.out.print(SET_TEXT_COLOR_WHITE);
             System.out.println("    a  b  c  d  e  f  g  h ");
-            for (int i = 8; i > 0; --i) {
+            for (int i = 7; i > -1; --i) {
                 System.out.print(RESET_BG_COLOR);
                 System.out.print(SET_TEXT_COLOR_WHITE);
                 System.out.print(SET_TEXT_BOLD);
                 System.out.print(" " + String.valueOf(i) + " ");
-                for (int j = 8; j > 0; --j) {
+                for (int j = 7; j > -1; --j) {
                     ++counter;
                     if (counter % 2 == 0) {
                         System.out.print("\u001b[31;100m");

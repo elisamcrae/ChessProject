@@ -31,7 +31,7 @@ public class Game {
     /**
      * The counter used to create the game ID
      */
-    static int counter = 1;
+    static int counter = 100;
     /**
      * The array of observers in the game
      */

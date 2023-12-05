@@ -80,6 +80,17 @@ public class GameSQL implements GameDAO{
             db.returnConnection(conn);
         }
     }
+    public static void updateGame(int gameID, Game g) throws DataAccessException {
+        var conn = db.getConnection();
+        try (var preparedStatement = conn.prepareStatement("UPDATE game SET games=? WHERE gameID=?")) {
+            var json = new Gson().toJson(g);
+            preparedStatement.setString(1, json);
+            preparedStatement.setInt(2, gameID);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public static boolean claimSpot(int gameID, String playerColor, String auth) throws DataAccessException {
         int userID = AuthSQL.getUserID(auth);
         String username = UserSQL.getUsername(userID);
