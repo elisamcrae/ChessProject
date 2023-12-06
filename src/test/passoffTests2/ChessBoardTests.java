@@ -1,4 +1,4 @@
-package passoffTests;
+package passoffTests2;
 
 import chess.ChessBoard;
 import chess.ChessGame;

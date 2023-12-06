@@ -1,4 +1,4 @@
-package passoffTests.serverTests;
+package passoffTests2.serverTests;
 
 import dataAccess.AuthSQL;
 import dataAccess.DataAccessException;

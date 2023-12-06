@@ -17,9 +17,8 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 @WebSocket
 public class WSServer {
-    //private ConcurrentHashMap<Integer, ArrayList<Session>> games = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String, Session> sessionList = new ConcurrentHashMap<>();
-    private ChessGame.TeamColor teamTurn = ChessGame.TeamColor.WHITE;
+    private ConcurrentHashMap<Integer, ArrayList<Session>> games = new ConcurrentHashMap<>();
+
     @OnWebSocketMessage
     public void onMessage(org.eclipse.jetty.websocket.api.Session session, String message) throws Exception {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
@@ -35,26 +34,28 @@ public class WSServer {
         if (j.getGameID() == -1000 | !GameSQL.isFound(j.getGameID()) | !AuthSQL.isFound(j.authToken)) {
             ErrorSMessage error = new ErrorSMessage(ServerMessage.ServerMessageType.ERROR, "ERROR: could not add user as player");
             session.getRemote().sendString(new Gson().toJson(error));
+            return;
         }
 
         int userID = AuthSQL.getUserID(j.authToken);
         String username = UserSQL.getUsername(userID);
         ArrayList<String> players = GameSQL.getPlayers(j.getGameID());
         assert !players.isEmpty();
+        String auth = j.authToken;
 
-//        if (games.containsKey(j.getGameID())) {
-//            games.get(j.getGameID()).add(session);
-//        }
-//        else {
-//            ArrayList<Session> s = new ArrayList<Session>();
-//            s.add(session);
-//            games.put(j.getGameID(), s);
-//        }
-        if (sessionList.contains(username)) {
-            assert username != null;
-            sessionList.remove(username);
+        if (games.containsKey(j.getGameID())) {
+            games.get(j.getGameID()).add(session);
         }
-        sessionList.put(username, session);
+        else {
+            ArrayList<Session> s = new ArrayList<Session>();
+            s.add(session);
+            games.put(j.getGameID(), s);
+        }
+//        if (sessionList.contains(username)) {
+//            assert username != null;
+//            sessionList.remove(username);
+//        }
+//        sessionList.put(username, session);
 
         //Check for illegal join cases
         if (j.getPlayerColor() == ChessGame.TeamColor.WHITE & !Objects.equals(players.get(0), username)) {
@@ -66,7 +67,7 @@ public class WSServer {
             session.getRemote().sendString(new Gson().toJson(error));
         }
         else {
-            ArrayList<Game> gamesToCheck = GameSQL.listGames(j.authToken);
+            ArrayList<Game> gamesToCheck = GameSQL.listGames(auth);
             assert gamesToCheck != null;
             for (Game item : gamesToCheck) {
                 if (item.getGameID() == j.getGameID()) {
@@ -90,23 +91,14 @@ public class WSServer {
             }
             else {
                 //Add user to the game and notify others
-                String playerUsername = UserSQL.getUsername(AuthSQL.getUserID(j.authToken));
-                String message = String.format("%s has joined the game as %s", playerUsername, j.getPlayerColor());
+                //String playerUsername = UserSQL.getUsername(AuthSQL.getUserID(j.authToken)); // CHECK THIS OUT
+                //String message = String.format("%s has joined the game as %s", username, j.getPlayerColor());
+                String message = username + " has joined the game as " + j.getPlayerColor();
                 NotificationSMessage notification = new NotificationSMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
-//                for (Session value : games.get(j.getGameID())) {
-//                    if (value != session) {
-//                        value.getRemote().sendString(new Gson().toJson(notification));
-//                    }
-//                    else {
-//                        LoadGameSMessage game = new LoadGameSMessage(ServerMessage.ServerMessageType.LOAD_GAME, Objects.requireNonNull(GameSQL.getBoard(j.getGameID())).getGame());
-//                        session.getRemote().sendString(new Gson().toJson(game));
-//                    }
-//                }
-                for (Session value : sessionList.values()) {
+                for (Session value : games.get(j.getGameID())) {
                     if (value != session) {
                         value.getRemote().sendString(new Gson().toJson(notification));
-                    }
-                    else {
+                    } else {
                         LoadGameSMessage game = new LoadGameSMessage(ServerMessage.ServerMessageType.LOAD_GAME, Objects.requireNonNull(GameSQL.getBoard(j.getGameID())).getGame());
                         session.getRemote().sendString(new Gson().toJson(game));
                     }
@@ -120,28 +112,28 @@ public class WSServer {
             session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
-//        if (games.containsKey(j.getGameID())) {
-//            games.get(j.getGameID()).add(session);
-//        }
-//        else {
-//            ArrayList<Session> s = new ArrayList<Session>();
-//            s.add(session);
-//            games.put(j.getGameID(), s);
-//        }
+        if (games.containsKey(j.getGameID())) {
+            games.get(j.getGameID()).add(session);
+        }
+        else {
+            ArrayList<Session> s = new ArrayList<Session>();
+            s.add(session);
+            games.put(j.getGameID(), s);
+        }
         int userID = AuthSQL.getUserID(j.authToken);
         String username = UserSQL.getUsername(userID);
-        if (sessionList.contains(username)) {
-            assert username != null;
-            sessionList.remove(username);
-        }
-        sessionList.put(username, session);
+//        if (sessionList.contains(username)) {
+//            assert username != null;
+//            sessionList.remove(username);
+//        }
+//        sessionList.put(username, session);
 
         //Now that all the error checks have passed, add user as observer and notify others
         //String playerUsername = UserSQL.getUsername(AuthSQL.getUserID(j.authToken));
         //String message = String.format("%s has joined the game as an observer", username);
         String message = username + " has joined the game as an observer";
-        //for (Session value : games.get(j.getGameID())) {
-        for (Session value : sessionList.values()) {
+        for (Session value : games.get(j.getGameID())) {
+        //for (Session value : sessionList.values()) {
             if (value != session) {
                 NotificationSMessage notification = new NotificationSMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
                 value.getRemote().sendString(new Gson().toJson(notification));
@@ -168,14 +160,24 @@ public class WSServer {
         ((ChessPositionE)j.getMove().getEndPosition()).setCol(endPosition.getColumn()-1);
 
         ChessPiece pieceToMove = GameSQL.getBoard(j.getGameID()).getGame().getBoard().getPiece(startPosition);
-
+        ChessGame chessgame = GameSQL.getBoard(j.getGameID()).getGame();
+        //private ConcurrentHashMap<String, Session> sessionList = new ConcurrentHashMap<>();
+        ChessGame.TeamColor teamTurn = chessgame.getTeamTurn();
+        String usernameTryingToMakeMove = UserSQL.getUsername(AuthSQL.getUserID(j.authToken));
+        ChessGame.TeamColor colorTryingToMakeMove = ChessGame.TeamColor.WHITE;
+        ChessGame.TeamColor otherColor = ChessGame.TeamColor.BLACK;
+        ArrayList<String> players = GameSQL.getPlayers(j.getGameID());
+        if (Objects.equals(usernameTryingToMakeMove, Objects.requireNonNull(players.get(1)))) {
+            colorTryingToMakeMove = ChessGame.TeamColor.BLACK;
+            otherColor = ChessGame.TeamColor.WHITE;
+        }
         //Check for errors
         if (pieceToMove == null) {
             ErrorSMessage error = new ErrorSMessage(ServerMessage.ServerMessageType.ERROR, "ERROR: no piece at that position.");
             session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
-        if (pieceToMove.getTeamColor() != teamTurn) {
+        if (pieceToMove.getTeamColor() != teamTurn | pieceToMove.getTeamColor() != colorTryingToMakeMove) {
             ErrorSMessage error = new ErrorSMessage(ServerMessage.ServerMessageType.ERROR, "ERROR: wrong turn.");
             session.getRemote().sendString(new Gson().toJson(error));
             return;
@@ -184,17 +186,6 @@ public class WSServer {
             ErrorSMessage error = new ErrorSMessage(ServerMessage.ServerMessageType.ERROR, "ERROR: a player has already resigned from this game.");
             session.getRemote().sendString(new Gson().toJson(error));
             return;
-        }
-
-        ChessGame chessgame = GameSQL.getBoard(j.getGameID()).getGame();
-        teamTurn = chessgame.getTeamTurn();
-        String usernameTryingToMakeMove = UserSQL.getUsername(AuthSQL.getUserID(j.authToken));
-        ChessGame.TeamColor colorTryingToMakeMove = ChessGame.TeamColor.WHITE;
-        ChessGame.TeamColor otherColor = ChessGame.TeamColor.BLACK;
-        ArrayList<String> players = GameSQL.getPlayers(j.getGameID());
-        if (Objects.equals(usernameTryingToMakeMove, Objects.requireNonNull(players.get(1)))) {
-            colorTryingToMakeMove = ChessGame.TeamColor.BLACK;
-            otherColor = ChessGame.TeamColor.WHITE;
         }
 
         if (!players.contains(usernameTryingToMakeMove)) {
@@ -216,8 +207,8 @@ public class WSServer {
         GameSQL.updateGame(j.getGameID(), g);
         String message = usernameTryingToMakeMove + " has made a move.";
         LoadGameSMessage game = new LoadGameSMessage(ServerMessage.ServerMessageType.LOAD_GAME, Objects.requireNonNull(chessgame));
-        //for (Session value : games.get(j.getGameID())) {
-        for (Session value : sessionList.values()) {
+        for (Session value : games.get(j.getGameID())) {
+        //for (Session value : sessionList.values()) {
             if (value != session) {
                 NotificationSMessage notification = new NotificationSMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
                 value.getRemote().sendString(new Gson().toJson(notification));
@@ -228,12 +219,12 @@ public class WSServer {
             }
         }
         //Update whose turn it is in game
-        if (teamTurn == ChessGame.TeamColor.WHITE) {
-            teamTurn = ChessGame.TeamColor.BLACK;
-        }
-        else {
-            teamTurn = ChessGame.TeamColor.WHITE;
-        }
+//        if (teamTurn == ChessGame.TeamColor.WHITE) {
+//            teamTurn = ChessGame.TeamColor.BLACK;
+//        }
+//        else {
+//            teamTurn = ChessGame.TeamColor.WHITE;
+//        }
 
         //Check if the move resulted in a check or checkmate; if so, send notifications
         boolean isInCheckOrCheckmate = false;
@@ -246,26 +237,27 @@ public class WSServer {
             isInCheckOrCheckmate = true;
         }
         if (isInCheckOrCheckmate) {
-            //for (Session value : games.get(j.getGameID())) {
-            for (Session value : sessionList.values()) {
+            for (Session value : games.get(j.getGameID())) {
+            //for (Session value : sessionList.values()) {
                 NotificationSMessage notification = new NotificationSMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
                 value.getRemote().sendString(new Gson().toJson(notification));
             }
         }
     }
     private void leave(Session session, LeaveUCommand j) throws IOException, DataAccessException {
-        String playerUsername = UserSQL.getUsername(AuthSQL.getUserID(j.authToken));
+        int userID = AuthSQL.getUserID(j.authToken);
+        String playerUsername = UserSQL.getUsername(userID);
         String message = playerUsername + " has left the game.";
-        //for (Session value : games.get(j.getGameID())) {
-        for (Session value : sessionList.values()) {
+        for (Session value : games.get(j.getGameID())) {
+        //for (Session value : sessionList.values()) {
             if (value != session) {
                 NotificationSMessage notification = new NotificationSMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
                 value.getRemote().sendString(new Gson().toJson(notification));
             }
         }
         GameSQL.getBoard(j.getGameID()).setGameID(-1);
-        //games.get(j.getGameID()).remove(session);
-        sessionList.remove(playerUsername);
+        boolean removed = games.get(j.getGameID()).remove(session);
+        //sessionList.remove(playerUsername);
     }
     private void resign(Session session, ResignUCommand j) throws IOException, DataAccessException {
         ArrayList<String> players = GameSQL.getPlayers(j.getGameID());
@@ -280,15 +272,15 @@ public class WSServer {
             return;
         }
         String playerUsername = UserSQL.getUsername(AuthSQL.getUserID(j.authToken));
-        String message = playerUsername + " has resigned from the game.";
-        //for (Session value : games.get(j.getGameID())) {
-        for (Session value : sessionList.values()) {
+        for (Session value : games.get(j.getGameID())) {
+        //for (Session value : sessionList.values()) {
             if (value != session) {
+                String message = playerUsername + " has resigned from the game.";
                 NotificationSMessage notification = new NotificationSMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
                 value.getRemote().sendString(new Gson().toJson(notification));
             }
             else {
-                message = "You have resigned from the game.";
+                String message = "You have resigned from the game.";
                 NotificationSMessage notification = new NotificationSMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
                 value.getRemote().sendString(new Gson().toJson(notification));
             }
